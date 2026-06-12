@@ -1,0 +1,475 @@
+import { useEffect, useRef, useCallback } from 'react';
+
+const PARTICLE_COUNT = 4000; // Max density for super crisp outlines
+
+function randomBetween(a, b) { return a + Math.random() * (b - a); }
+
+// Pixel Sampling Utility
+function getShapePoints(shapeType, canvasW, canvasH) {
+  const canvas = document.createElement('canvas');
+  canvas.width = canvasW;
+  canvas.height = canvasH;
+  const ctx = canvas.getContext('2d', { willReadFrequently: true });
+  
+  // Randomize scale and position for ALL shapes
+  let scale = Math.min(canvasW, canvasH) * randomBetween(0.15, 0.35);
+  let cx = randomBetween(scale * 2, canvasW - scale * 2);
+  let cy = randomBetween(scale * 2, canvasH - scale * 2);
+
+  // ONLY center and fix size for the very first initial shape
+  if (shapeType === 'face_initial') {
+    scale = Math.min(canvasW, canvasH) * 0.4;
+    cx = canvasW / 2;
+    cy = canvasH / 2;
+  }
+
+  // Draw outlines (strokes) and fills to create volumetric dot matrix shapes
+  ctx.strokeStyle = '#fff';
+  ctx.fillStyle = '#fff';
+  ctx.lineJoin = 'round';
+  ctx.lineCap = 'round';
+  
+  if (shapeType === 'usuario' || shapeType === 'face_initial') {
+    ctx.lineWidth = scale * 0.15; 
+    // Head
+    ctx.beginPath();
+    ctx.arc(cx, cy - scale*0.3, scale*0.35, 0, Math.PI*2);
+    ctx.stroke();
+    // Shoulders (dome)
+    ctx.beginPath();
+    ctx.moveTo(cx - scale*0.8, cy + scale*0.8);
+    ctx.bezierCurveTo(cx - scale*0.8, cy + scale*0.1, cx + scale*0.8, cy + scale*0.1, cx + scale*0.8, cy + scale*0.8);
+    ctx.stroke();
+  } 
+  else if (shapeType === 'grafica') {
+    // Chaos to Clarity (Scribble to Sun)
+    ctx.lineWidth = scale * 0.08;
+    
+    // Increased the distance multiplier to make the connecting line much longer
+    const leftCx = cx - scale * 1.4;
+    const rightCx = cx + scale * 1.4;
+    
+    // Left: Chaos scribble
+    ctx.beginPath();
+    let px = leftCx;
+    let py = cy;
+    ctx.moveTo(px, py);
+    // Draw many random overlapping curves to simulate a tangled ball of yarn
+    for (let i = 0; i < 35; i++) {
+       const nextX = leftCx + randomBetween(-scale*0.4, scale*0.4);
+       const nextY = cy + randomBetween(-scale*0.4, scale*0.4);
+       const cp1x = leftCx + randomBetween(-scale*0.7, scale*0.7);
+       const cp1y = cy + randomBetween(-scale*0.7, scale*0.7);
+       const cp2x = leftCx + randomBetween(-scale*0.7, scale*0.7);
+       const cp2y = cy + randomBetween(-scale*0.7, scale*0.7);
+       ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, nextX, nextY);
+       px = nextX;
+       py = nextY;
+    }
+    ctx.stroke();
+    
+    // Connecting line (from last point of scribble to the right circle)
+    ctx.beginPath();
+    ctx.moveTo(px, py);
+    ctx.bezierCurveTo(cx, cy + scale*0.4, cx, cy - scale*0.4, rightCx - scale*0.5, cy);
+    ctx.stroke();
+    
+    // Right: Clarity (Sun/Circle)
+    ctx.beginPath();
+    ctx.arc(rightCx, cy, scale * 0.5, 0, Math.PI * 2);
+    // Draw it twice slightly offset to make it a bit thicker/hand-drawn looking
+    ctx.arc(rightCx, cy, scale * 0.48, 0, Math.PI * 2);
+    ctx.stroke();
+    
+    // Sun rays
+    const rayCount = 10;
+    for(let i = 0; i < rayCount; i++) {
+        const angle = (i / rayCount) * Math.PI * 2;
+        const startR = scale * 0.65;
+        const endR = scale * 0.85;
+        ctx.beginPath();
+        ctx.moveTo(rightCx + Math.cos(angle)*startR, cy + Math.sin(angle)*startR);
+        ctx.lineTo(rightCx + Math.cos(angle)*endR, cy + Math.sin(angle)*endR);
+        ctx.stroke();
+    }
+  } 
+  else if (shapeType === 'lupa') {
+    ctx.lineWidth = scale * 0.15;
+    ctx.beginPath();
+    ctx.arc(cx - scale*0.2, cy - scale*0.2, scale*0.5, 0, Math.PI*2);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(cx + scale*0.2, cy + scale*0.2);
+    ctx.lineTo(cx + scale*0.8, cy + scale*0.8);
+    ctx.stroke();
+    
+    ctx.lineWidth = scale * 0.08;
+    ctx.beginPath();
+    ctx.moveTo(cx - scale*0.4, cy - scale*0.1);
+    ctx.lineTo(cx - scale*0.2, cy - scale*0.4);
+    ctx.lineTo(cx, cy - scale*0.2);
+    ctx.lineTo(cx + scale*0.2, cy - scale*0.5);
+    ctx.stroke();
+  } 
+  else if (shapeType === 'robot') {
+    ctx.lineWidth = scale * 0.12;
+    // Head (Main Body)
+    ctx.beginPath();
+    ctx.roundRect(cx - scale*0.7, cy - scale*0.4, scale*1.4, scale*0.9, scale*0.25);
+    ctx.stroke();
+    
+    // Antenna stem
+    ctx.beginPath();
+    ctx.moveTo(cx, cy - scale*0.4);
+    ctx.lineTo(cx, cy - scale*0.6);
+    ctx.stroke();
+    // Antenna circle
+    ctx.beginPath();
+    ctx.arc(cx, cy - scale*0.8, scale*0.2, 0, Math.PI*2);
+    ctx.stroke();
+    // Antenna inner dot
+    ctx.beginPath();
+    ctx.arc(cx, cy - scale*0.8, scale*0.08, 0, Math.PI*2);
+    ctx.fill();
+    
+    // Eyes (Pill shapes)
+    ctx.beginPath();
+    ctx.roundRect(cx - scale*0.4, cy - scale*0.1, scale*0.3, scale*0.15, scale*0.1);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.roundRect(cx + scale*0.1, cy - scale*0.1, scale*0.3, scale*0.15, scale*0.1);
+    ctx.fill();
+    
+    // Arms
+    ctx.beginPath();
+    ctx.moveTo(cx - scale*0.7, cy);
+    ctx.lineTo(cx - scale*1.0, cy + scale*0.2);
+    ctx.lineTo(cx - scale*1.0, cy + scale*0.5);
+    ctx.stroke();
+    
+    ctx.beginPath();
+    ctx.moveTo(cx + scale*0.7, cy);
+    ctx.lineTo(cx + scale*1.0, cy + scale*0.2);
+    ctx.lineTo(cx + scale*1.0, cy + scale*0.5);
+    ctx.stroke();
+    
+    // Legs
+    ctx.beginPath();
+    ctx.roundRect(cx - scale*0.35, cy + scale*0.5, scale*0.25, scale*0.4, scale*0.1);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.roundRect(cx + scale*0.1, cy + scale*0.5, scale*0.25, scale*0.4, scale*0.1);
+    ctx.fill();
+  } 
+  else if (shapeType === 'lentes_retro') {
+    // Rectangular retro glasses
+    const lensW = scale * 1.2; // Made significantly wider
+    const lensH = scale * 0.65;
+    const bridgeW = scale * 0.4;
+    const bridgeH = scale * 0.15;
+    const tabW = scale * 0.7; // Much longer ear tabs
+    
+    // Left Lens
+    ctx.beginPath();
+    ctx.roundRect(cx - bridgeW/2 - lensW, cy - lensH/2, lensW, lensH, scale * 0.15);
+    ctx.fill();
+    
+    // Right Lens
+    ctx.beginPath();
+    ctx.roundRect(cx + bridgeW/2, cy - lensH/2, lensW, lensH, scale * 0.15);
+    ctx.fill();
+    
+    // Bridge
+    ctx.fillRect(cx - bridgeW/2, cy - bridgeH/2, bridgeW, bridgeH);
+    
+    // Side tabs (agarrederas)
+    ctx.fillRect(cx - bridgeW/2 - lensW - tabW, cy - bridgeH/2, tabW, bridgeH);
+    ctx.fillRect(cx + bridgeW/2 + lensW, cy - bridgeH/2, tabW, bridgeH);
+    
+    // Add the tiny highlight dots
+    ctx.globalCompositeOperation = 'destination-out';
+    ctx.beginPath();
+    ctx.arc(cx - bridgeW/2 - lensW + scale*0.25, cy - lensH/2 + scale*0.25, scale*0.1, 0, Math.PI*2);
+    ctx.arc(cx + bridgeW/2 + scale*0.25, cy - lensH/2 + scale*0.25, scale*0.1, 0, Math.PI*2);
+    ctx.fill();
+    ctx.globalCompositeOperation = 'source-over';
+  }
+  else if (shapeType === 'ai') {
+    let fontSize = scale * 3.5;
+    if (fontSize * 2 > canvasW) {
+      fontSize = canvasW / 2;
+    }
+    ctx.font = `900 ${fontSize}px 'Space Grotesk', sans-serif`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('AI', cx, cy);
+  }
+
+  const imgData = ctx.getImageData(0, 0, canvasW, canvasH).data;
+  const points = [];
+  // Extreme high resolution sampling
+  const step = 3; 
+  for (let y = 0; y < canvasH; y += step) {
+    for (let x = 0; x < canvasW; x += step) {
+      const alpha = imgData[(y * canvasW + x) * 4 + 3];
+      if (alpha > 128) {
+        points.push({x, y});
+      }
+    }
+  }
+  return points;
+}
+
+export default function ParticleCanvas() {
+  const canvasRef = useRef(null);
+  const animRef = useRef(null);
+  const particlesRef = useRef([]);
+  const ripplesRef = useRef([]);
+
+  const initParticles = useCallback((w, h) => {
+    const initialPoints = getShapePoints('face_initial', w, h);
+
+    particlesRef.current = Array.from({ length: PARTICLE_COUNT }, (_, i) => {
+      let x, y;
+      
+      // 100% of particles in Capa 2 belong to the shape
+      if (initialPoints.length > 0) {
+        const pt = initialPoints[Math.floor(Math.random() * initialPoints.length)];
+        x = pt.x;
+        y = pt.y;
+      } else {
+        x = w / 2;
+        y = h / 2;
+      }
+      
+      let targetX = x;
+      let targetY = y;
+
+      // Match Capa 1 exactly
+      const isBright = Math.random() > 0.85; 
+      const isCyan = Math.random() > 0.90;
+      const isPurple = Math.random() > 0.80 && !isCyan;
+      
+      let color = [79, 70, 229]; // #4f46e5 base indigo
+      if (isBright) color = [255, 255, 255];
+      if (isCyan) color = [34, 211, 238];
+      if (isPurple) color = [167, 139, 250];
+
+      return {
+        x, y,
+        baseX: x, baseY: y, // Currently moving nowhere (scattered)
+        targetX, targetY,   // Where they need to go later
+        radius: randomBetween(1.0, 1.8), 
+        color,
+        alpha: randomBetween(0.7, 1.0), 
+        phase: randomBetween(0, Math.PI * 2), 
+        floatSpeed: randomBetween(0.01, 0.03) 
+      };
+    });
+  }, []);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext('2d');
+    let w, h;
+
+    const resize = () => {
+      w = canvas.width = window.innerWidth;
+      h = canvas.height = window.innerHeight;
+      if (particlesRef.current.length === 0) {
+        initParticles(w, h);
+      }
+    };
+
+    resize();
+    window.addEventListener('resize', resize);
+    
+    // Dynamic Morphing Logic
+    const shapes = ['grafica', 'lupa', 'ai', 'lentes_retro', 'robot', 'usuario'];
+    let shapeIndex = 0;
+    
+    const morphInterval = setInterval(() => {
+      const nextShape = shapes[shapeIndex % shapes.length];
+      shapeIndex++;
+      
+      const newPoints = getShapePoints(nextShape, w, h);
+      if (newPoints.length === 0) return;
+      
+      const particles = particlesRef.current;
+      
+      for (let i = 0; i < PARTICLE_COUNT; i++) {
+        const targetPt = newPoints[Math.floor(Math.random() * newPoints.length)];
+        particles[i].baseX = targetPt.x;
+        particles[i].baseY = targetPt.y;
+      }
+    }, 10000); // Morph every 10 seconds
+    
+    // Click for Shockwave
+    const onClick = (e) => {
+      ripplesRef.current.push({
+        x: e.clientX,
+        y: e.clientY,
+        radius: 0,
+        maxRadius: Math.max(w, h) * 1.5,
+        speed: 15,
+        width: 100 
+      });
+    };
+    
+    // Track mouse for local repulsion
+    let mx = -9999, my = -9999;
+    const onMouseMove = (e) => {
+      mx = e.clientX;
+      my = e.clientY;
+    };
+
+    window.addEventListener('click', onClick);
+    window.addEventListener('mousemove', onMouseMove);
+
+    // Track visible particles to simulate gradual generation
+    let currentParticleCount = 0;
+    let framesPassed = 0;
+    let startIncrementing = false;
+    setTimeout(() => { 
+      startIncrementing = true; 
+      currentParticleCount = 50; 
+    }, 900); // start at 0.9s
+
+    const draw = () => {
+      ctx.clearRect(0, 0, w, h);
+      
+      const particles = particlesRef.current;
+      const ripples = ripplesRef.current;
+
+      // Increment visible particles based on specific timing curve:
+      // Start at 0.9s with 50 particles.
+      // 1.2s (18 frames later): 200 particles.
+      // 2.0s (66 frames later): 600 particles.
+      if (startIncrementing && currentParticleCount < particles.length) {
+        framesPassed++;
+        if (framesPassed <= 66) {
+          // From 0.9s to 2.0s (66 frames): ~8.33 particles/frame
+          // Frame 18 (1.2s): 50 + (18 * 8.33) = 200
+          // Frame 66 (2.0s): 50 + (66 * 8.33) = 600
+          currentParticleCount += 8.33; 
+        } else {
+          // After 2.0s: accelerate to finish the remaining 3400 particles over ~3 seconds
+          currentParticleCount += 18.88; 
+        }
+        
+        if (currentParticleCount > particles.length) {
+          currentParticleCount = particles.length;
+        }
+      }
+
+      // Update ripples
+      for (let i = ripples.length - 1; i >= 0; i--) {
+        ripples[i].radius += ripples[i].speed;
+        if (ripples[i].radius > ripples[i].maxRadius) {
+          ripples.splice(i, 1);
+        }
+      }
+
+      // Draw particles up to the currently visible limit
+      for (let i = 0; i < currentParticleCount; i++) {
+        const p = particles[i];
+        
+        p.phase += p.floatSpeed; 
+
+        // Floating naturally around base position
+        let targetX = p.baseX + Math.sin(p.phase) * 20;
+        let targetY = p.baseY + Math.cos(p.phase * 0.8) * 20;
+        
+        let stretch = 1;
+        let angle = 0;
+        let isActiveRipple = false;
+
+        // Mouse repulsion
+        const dxMouse = p.x - mx;
+        const dyMouse = p.y - my;
+        const distMouse = Math.sqrt(dxMouse * dxMouse + dyMouse * dyMouse);
+        if (distMouse < 150) {
+          const force = (150 - distMouse) / 150;
+          targetX += (dxMouse / distMouse) * force * 60;
+          targetY += (dyMouse / distMouse) * force * 60;
+        }
+
+        // Apply shockwave physics
+        for (const r of ripples) {
+          const dx = p.x - r.x;
+          const dy = p.y - r.y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          
+          const waveDist = Math.abs(dist - r.radius);
+          
+          if (waveDist < r.width) {
+            isActiveRipple = true;
+            angle = Math.atan2(dy, dx);
+            
+            const force = (r.width - waveDist) / r.width;
+            targetX += Math.cos(angle) * force * 40;
+            targetY += Math.sin(angle) * force * 40;
+            
+            stretch = Math.max(stretch, 1 + (r.radius * force * 0.015));
+          }
+        }
+
+        // Smoothly interpolate towards base/target (lowered factor for slow, graceful movement)
+        p.x += (targetX - p.x) * 0.015;
+        p.y += (targetY - p.y) * 0.015;
+
+        // Draw particle
+        const currentAlpha = p.alpha * (0.7 + Math.sin(p.phase * 2) * 0.3);
+        const [r, g, b] = p.color;
+
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        
+        if (isActiveRipple && stretch > 1.5) {
+          // Elongated dash/laser when hit by shockwave
+          ctx.rotate(angle);
+          const length = p.radius * stretch;
+          ctx.beginPath();
+          ctx.roundRect(-length / 2, -p.radius / 2, length, p.radius, p.radius / 2);
+          ctx.fillStyle = `rgba(${r},${g},${b},${currentAlpha})`;
+          ctx.fill();
+        } else {
+          // Clean, simple dot
+          ctx.beginPath();
+          ctx.arc(0, 0, p.radius, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(${r},${g},${b},${currentAlpha})`;
+          ctx.fill();
+        }
+        
+        ctx.restore();
+      }
+
+      animRef.current = requestAnimationFrame(draw);
+    };
+
+    draw();
+
+    return () => {
+      cancelAnimationFrame(animRef.current);
+      clearInterval(morphInterval);
+      window.removeEventListener('resize', resize);
+      window.removeEventListener('click', onClick);
+      window.removeEventListener('mousemove', onMouseMove);
+    };
+  }, [initParticles]);
+
+  return (
+    <canvas
+      ref={canvasRef}
+      style={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: '100vw',
+        height: '100vh',
+        zIndex: 0,
+        pointerEvents: 'none',
+      }}
+    />
+  );
+}
