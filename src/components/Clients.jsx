@@ -97,74 +97,7 @@ function LogoImg({ client, index }) {
 
 export default function Clients() {
   const rowRef = useRef(null);
-  const canvasRef = useRef(null);
   const pausedRef = useRef(false);
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d', { alpha: true });
-    let animId;
-
-    let particles = [];
-    const initParticles = () => {
-      particles = Array.from({ length: 150 }, () => {
-        return {
-          x: Math.random() * canvas.width,
-          baseY: Math.random() * canvas.height,
-          phase: Math.random() * Math.PI * 2,
-          speed: Math.random() * 1.5 + 0.5,
-          size: Math.random() * 1.5 + 0.5,
-          length: Math.random() * 15 + 5, // Make them longer (streaks)
-          opacity: Math.random() * 0.5 + 0.1
-        };
-      });
-    };
-
-    const resize = () => {
-      canvas.width = canvas.offsetWidth;
-      canvas.height = canvas.offsetHeight;
-      initParticles();
-    };
-    resize();
-    window.addEventListener('resize', resize);
-
-    const animateParticles = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      particles.forEach(p => {
-        p.x -= p.speed; 
-        if (p.x + p.length < -10) {
-          p.x = canvas.width + 10;
-          p.baseY = Math.random() * canvas.height;
-        }
-
-        // Apply a sine wave to their Y coordinate to match the logos' bouncing
-        const waveFreq = 0.005;
-        const waveAmp = 15;
-        const currentY = p.baseY + Math.sin(p.x * waveFreq + p.phase) * waveAmp;
-        const tailX = p.x + p.length;
-        const tailY = p.baseY + Math.sin(tailX * waveFreq + p.phase) * waveAmp;
-
-        ctx.globalAlpha = p.opacity;
-        ctx.strokeStyle = '#38bdf8';
-        ctx.lineWidth = p.size;
-        ctx.lineCap = 'round';
-        ctx.beginPath();
-        ctx.moveTo(p.x, currentY);
-        ctx.lineTo(tailX, tailY);
-        ctx.stroke();
-      });
-
-      animId = requestAnimationFrame(animateParticles);
-    };
-    animateParticles();
-
-    return () => {
-      cancelAnimationFrame(animId);
-      window.removeEventListener('resize', resize);
-    };
-  }, []);
 
   useEffect(() => {
     const row = rowRef.current;
@@ -192,9 +125,6 @@ export default function Clients() {
 
   return (
     <section id="clients" style={{ padding: '48px 0', overflow: 'hidden', position: 'relative', background: 'rgba(0, 0, 0, 0.4)', borderTop: '1px solid rgba(255,255,255,0.02)', borderBottom: '1px solid rgba(255,255,255,0.02)' }}>
-      {/* Background Particles Canvas */}
-      <canvas ref={canvasRef} style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none', zIndex: 0 }} />
-
       {/* Edge fades */}
       {['left', 'right'].map(side => (
         <div key={side} style={{
