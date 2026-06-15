@@ -36,7 +36,7 @@ function LogoImg({ client, index }) {
         rotate: 0,
       } : {
         y: [-10, 10, -10],
-        rotate: [-3, 3, -3],
+        rotate: [-1.5, 1.5, -1.5],
         scale: 1,
       }}
       transition={isHovered ? {
