@@ -1,130 +1,98 @@
+import React from 'react';
+
 export default function Footer() {
   return (
     <footer style={{
-      borderTop: '1px solid rgba(255,255,255,0.04)',
-      padding: '48px 24px',
-      background: '#04040a',
+      background: '#000000',
+      padding: '100px 48px 48px 48px',
+      position: 'relative',
+      overflow: 'hidden',
+      borderTop: '1px solid rgba(255,255,255,0.05)'
     }}>
       <div style={{
-        maxWidth: 1200,
+        maxWidth: 1400,
         margin: '0 auto',
-        display: 'flex',
-        flexDirection: 'column',
-        gap: 32,
       }}>
-        {/* Top row */}
+        
+        {/* Top Section */}
         <div style={{
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'flex-start',
           flexWrap: 'wrap',
-          gap: 32,
+          gap: 48,
+          marginBottom: 120,
         }}>
-          {/* Brand */}
-          <div style={{ maxWidth: 280 }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
-              <div style={{
-                width: 32,
-                height: 32,
-                borderRadius: 8,
-                background: 'linear-gradient(135deg, #6366f1, #8b5cf6)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontSize: '16px',
-              }}>
-                🔍
-              </div>
-              <span style={{
-                fontSize: '18px',
-                fontWeight: 800,
-                background: 'linear-gradient(135deg, #f8fafc, #94a3b8)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                fontFamily: 'Space Grotesk, sans-serif',
-              }}>
-                Sherlock AI
-              </span>
-            </div>
-            <p style={{ fontSize: '13px', color: '#334155', lineHeight: 1.7 }}>
-              La plataforma líder de usuarios sintéticos para equipos de producto que quieren entender a sus usuarios antes de perderlos.
-            </p>
+          {/* Top Left: Catchphrase */}
+          <div>
+            <h3 style={{
+              fontSize: '28px',
+              fontWeight: 500,
+              color: '#f8fafc',
+              margin: 0,
+              fontFamily: '"Inter", sans-serif',
+              letterSpacing: '-0.02em'
+            }}>
+              Empieza a investigar
+            </h3>
           </div>
 
-          {/* Links */}
-          <div style={{ display: 'flex', gap: 48, flexWrap: 'wrap' }}>
+          {/* Top Right: Links */}
+          <div style={{
+            display: 'flex',
+            gap: 120,
+            paddingRight: '4vw'
+          }}>
             {[
               {
-                title: 'Plataforma',
-                links: ['Características', 'Cómo funciona', 'Casos de uso', 'Integraciones'],
+                links: ['Descargar', 'Producto', 'Docs', 'Changelog', 'Prensa', 'Lanzamientos']
               },
               {
-                title: 'Empresa',
-                links: ['Sobre nosotros', 'Blog', 'Clientes', 'Contacto'],
-              },
-              {
-                title: 'Legal',
-                links: ['Privacidad', 'Términos', 'Cookies'],
-              },
-            ].map(col => (
-              <div key={col.title}>
-                <div style={{ fontSize: '11px', fontWeight: 700, color: '#475569', letterSpacing: '0.08em', marginBottom: 16 }}>
-                  {col.title.toUpperCase()}
-                </div>
+                links: ['Blog', 'Precios', 'Casos de Uso']
+              }
+            ].map((col, idx) => (
+              <div key={idx} style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
                 {col.links.map(link => (
-                  <div key={link} style={{ marginBottom: 8 }}>
-                    <a
-                      href="#"
-                      style={{
-                        fontSize: '13px',
-                        color: '#334155',
-                        textDecoration: 'none',
-                        transition: 'color 0.2s',
-                      }}
-                      onMouseEnter={e => e.target.style.color = '#94a3b8'}
-                      onMouseLeave={e => e.target.style.color = '#334155'}
-                    >
-                      {link}
-                    </a>
-                  </div>
+                  <a key={link} href="#" style={{
+                    color: '#94a3b8',
+                    textDecoration: 'none',
+                    fontSize: '15px',
+                    fontWeight: 500,
+                    transition: 'color 0.2s ease',
+                  }}
+                  onMouseEnter={e => e.target.style.color = '#f8fafc'}
+                  onMouseLeave={e => e.target.style.color = '#94a3b8'}
+                  >
+                    {link}
+                  </a>
                 ))}
               </div>
             ))}
           </div>
         </div>
 
-        {/* Bottom row */}
-        <div style={{
-          paddingTop: 24,
-          borderTop: '1px solid rgba(255,255,255,0.03)',
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          flexWrap: 'wrap',
-          gap: 12,
+      </div>
+
+      {/* Massive Brand Text */}
+      <div style={{
+        width: '100%',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center'
+      }}>
+        <h1 style={{
+          fontSize: '15vw',
+          fontWeight: 800,
+          margin: 0,
+          padding: 0,
+          letterSpacing: '-0.06em',
+          color: '#ffffff',
+          fontFamily: '"Inter", sans-serif',
+          whiteSpace: 'nowrap',
+          lineHeight: 0.9,
         }}>
-          <span style={{ fontSize: '12px', color: '#1e293b' }}>
-            © 2025 Sherlock AI. Todos los derechos reservados. Hecho en México 🇲🇽
-          </span>
-          <div style={{ display: 'flex', gap: 16 }}>
-            {['LinkedIn', 'Twitter', 'YouTube'].map(s => (
-              <a
-                key={s}
-                href="#"
-                style={{
-                  fontSize: '12px',
-                  color: '#1e293b',
-                  textDecoration: 'none',
-                  transition: 'color 0.2s',
-                }}
-                onMouseEnter={e => e.target.style.color = '#6366f1'}
-                onMouseLeave={e => e.target.style.color = '#1e293b'}
-              >
-                {s}
-              </a>
-            ))}
-          </div>
-        </div>
+          Ask-Sherlock
+        </h1>
       </div>
     </footer>
   );
