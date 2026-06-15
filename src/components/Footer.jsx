@@ -21,7 +21,7 @@ export default function Footer() {
           alignItems: 'flex-start',
           flexWrap: 'wrap',
           gap: 48,
-          marginBottom: 120,
+          marginBottom: 40,
         }}>
           {/* Top Left: Catchphrase */}
           <div>
@@ -40,32 +40,41 @@ export default function Footer() {
           {/* Top Right: Links */}
           <div style={{
             display: 'flex',
-            gap: 120,
+            gap: 80,
             paddingRight: '4vw'
           }}>
             {[
               {
-                links: ['Descargar', 'Producto', 'Docs', 'Changelog', 'Prensa', 'Lanzamientos']
+                title: 'PLATAFORMA',
+                links: ['Características', 'Cómo funciona', 'Casos de uso', 'Integraciones']
               },
               {
-                links: ['Blog', 'Precios', 'Casos de Uso']
+                title: 'EMPRESA',
+                links: ['Sobre nosotros', 'Blog', 'Clientes', 'Contacto']
+              },
+              {
+                title: 'LEGAL',
+                links: ['Privacidad', 'Términos', 'Cookies']
               }
             ].map((col, idx) => (
-              <div key={idx} style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
-                {col.links.map(link => (
-                  <a key={link} href="#" style={{
-                    color: '#94a3b8',
-                    textDecoration: 'none',
-                    fontSize: '15px',
-                    fontWeight: 500,
-                    transition: 'color 0.2s ease',
-                  }}
-                  onMouseEnter={e => e.target.style.color = '#f8fafc'}
-                  onMouseLeave={e => e.target.style.color = '#94a3b8'}
-                  >
-                    {link}
-                  </a>
-                ))}
+              <div key={idx} style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+                <span style={{ fontSize: '13px', fontWeight: 800, color: '#475569', letterSpacing: '0.08em' }}>{col.title}</span>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+                  {col.links.map(link => (
+                    <a key={link} href="#" style={{
+                      color: '#64748b',
+                      textDecoration: 'none',
+                      fontSize: '15px',
+                      fontWeight: 500,
+                      transition: 'color 0.2s ease',
+                    }}
+                    onMouseEnter={e => e.target.style.color = '#f8fafc'}
+                    onMouseLeave={e => e.target.style.color = '#64748b'}
+                    >
+                      {link}
+                    </a>
+                  ))}
+                </div>
               </div>
             ))}
           </div>
