@@ -50,28 +50,97 @@ function randomFrom(arr) {
 export default function SyntheticSimulator() {
   const [profile, setProfile] = useState(BASE_PROFILES[0]);
   const [messages, setMessages] = useState([]);
-  const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [activeScript, setActiveScript] = useState([]);
   const scrollRef = useRef(null);
 
-  // Initialize random profile
   useEffect(() => {
     generateNewProfile();
   }, []);
 
-  const generateNewProfile = () => {
-    const newProf = randomFrom(BASE_PROFILES);
+  const generateNewProfile = async () => {
+    if (isGenerating) return;
+    
+    let newProf = randomFrom(BASE_PROFILES);
+    if (newProf.name === profile.name) {
+      newProf = BASE_PROFILES.find(p => p.name !== profile.name) || newProf;
+    }
     setProfile(newProf);
-    setMessages([
-      { 
-        id: Date.now().toString(), 
-        role: 'model', 
-        text: `¡Hola! Soy un ${newProf.name} de ${newProf.age} años. Actualmente estoy: "${newProf.persona}". ¿En qué te puedo ayudar o qué quieres probar conmigo?` 
-      }
-    ]);
-    setInput('');
-    setIsTyping(false);
+    setMessages([]);
+    setActiveScript([]);
+    setIsGenerating(true);
+
+    try {
+      const ai = new GoogleGenAI({ apiKey: import.meta.env.VITE_GEMINI_API_KEY });
+      const prompt = `Eres un simulador de entrevistas de UX. Genera la transcripción de una entrevista entre un "Investigador UX" (role: "user") y un "Usuario Sintético" (role: "model") con este perfil: Nombre: ${newProf.name}, Edad: ${newProf.age}, Situación: "${newProf.persona}".
+La entrevista debe ser profunda y detallada, de exactamente 6 a 8 mensajes alternados (empezando por el investigador).
+El investigador indaga sobre un problema. El usuario responde de manera muy realista, frustrada o constructiva según su perfil, en español de México.
+Responde ÚNICAMENTE con un JSON Array válido. Ejemplo: [{"role": "user", "text": "Hola, ¿qué tal?"}, {"role": "model", "text": "Bien."}]`;
+
+      const response = await ai.models.generateContent({
+        model: 'gemini-2.5-flash',
+        contents: [{ role: 'user', parts: [{ text: prompt }] }],
+        config: {
+          temperature: 0.8,
+          responseMimeType: "application/json",
+        }
+      });
+
+      const scriptData = JSON.parse(response.text);
+      setActiveScript(scriptData);
+    } catch (error) {
+      console.error("Error generating script:", error);
+      setActiveScript([
+        { role: 'user', text: 'Hola, notamos un problema en tu sesión.' },
+        { role: 'model', text: 'Sí, la plataforma está fallando. Necesito ayuda rápida.' }
+      ]);
+    } finally {
+      setIsGenerating(false);
+    }
   };
+
+  useEffect(() => {
+    let timeoutId;
+    let step = 0;
+    let isCancelled = false;
+
+    if (activeScript.length === 0 || isGenerating) return;
+
+    const playNext = () => {
+      if (isCancelled || step >= activeScript.length) {
+        setIsTyping(false);
+        return;
+      }
+      
+      const msg = activeScript[step];
+      const isBot = msg.role === 'model';
+      
+      setIsTyping(true);
+      const typingDelay = isBot ? Math.random() * 1500 + 1500 : Math.random() * 1000 + 800; 
+
+      timeoutId = setTimeout(() => {
+        if (!isCancelled) {
+          setIsTyping(false);
+          setMessages(prev => [...prev, { ...msg, id: Date.now().toString() + step }]);
+          step++;
+          
+          if (step < activeScript.length) {
+            timeoutId = setTimeout(playNext, 800); 
+          }
+        }
+      }, typingDelay);
+    };
+
+    setMessages([]);
+    setIsTyping(false);
+    timeoutId = setTimeout(playNext, 1000);
+
+    return () => {
+      isCancelled = true;
+      clearTimeout(timeoutId);
+    };
+  }, [activeScript, isGenerating]);
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -79,61 +148,11 @@ export default function SyntheticSimulator() {
     }
   }, [messages, isTyping]);
 
-  const handleSend = async (e) => {
-    e.preventDefault();
-    if (!input.trim() || isTyping) return;
-
-    const userMsg = input.trim();
-    setInput('');
-    
-    // Añadir mensaje del usuario
-    const newUserMsg = { id: Date.now().toString(), role: 'user', text: userMsg };
-    setMessages(prev => [...prev, newUserMsg]);
-    setIsTyping(true);
-
-    try {
-      const ai = new GoogleGenAI({ apiKey: import.meta.env.VITE_GEMINI_API_KEY });
-      const systemPrompt = `Eres un usuario de internet con el siguiente perfil: ${profile.name}, ${profile.age} años. Tu situación actual es: "${profile.persona}". Estás siendo entrevistado por un investigador de UX o respondiendo sobre tu experiencia con una página web/aplicación. Responde a sus preguntas de forma natural, realista, en primera persona, manteniendo ESTRICTAMENTE la personalidad, nivel técnico, tono y frustraciones de tu perfil. REGLA ESTRICTA: Se extremadamente conciso (1 párrafo corto). Nunca rompas el personaje.`;
-      
-      const response = await ai.models.generateContent({
-        model: 'gemini-2.5-flash',
-        contents: [
-          ...messages.map(m => ({
-            role: m.role,
-            parts: [{ text: m.text }]
-          })),
-          { role: 'user', parts: [{ text: userMsg }] }
-        ],
-        config: {
-          systemInstruction: systemPrompt,
-          temperature: 0.7,
-        }
-      });
-
-      const botText = response.text || 'Error al generar respuesta.';
-      
-      setMessages(prev => [...prev, {
-        id: (Date.now() + 1).toString(),
-        role: 'model',
-        text: botText
-      }]);
-    } catch (error) {
-      console.error("Error generating response:", error);
-      setMessages(prev => [...prev, {
-        id: (Date.now() + 1).toString(),
-        role: 'model',
-        text: '❌ Error de conexión con el motor sintético. Asegúrate de tener tu API Key configurada.'
-      }]);
-    } finally {
-      setIsTyping(false);
-    }
-  };
-
   return (
     <div style={{
       background: 'rgba(4,4,10,0.85)', backdropFilter: 'blur(24px)', border: '1px solid rgba(99,102,241,0.2)',
       borderRadius: '20px', overflow: 'hidden', boxShadow: '0 0 60px rgba(99,102,241,0.12), 0 0 120px rgba(139,92,246,0.06)',
-      width: '100%', maxWidth: '540px', display: 'flex', flexDirection: 'column'
+      width: '100%', maxWidth: '800px', display: 'flex', flexDirection: 'column'
     }}>
       {/* Header */}
       <div style={{ background: 'rgba(99,102,241,0.08)', borderBottom: '1px solid rgba(99,102,241,0.15)', padding: '16px 20px', display: 'flex', alignItems: 'center', gap: '10px' }}>
@@ -165,7 +184,12 @@ export default function SyntheticSimulator() {
       </div>
 
       {/* Messages Area */}
-      <div ref={scrollRef} style={{ height: 350, overflowY: 'auto', padding: '20px', display: 'flex', flexDirection: 'column', gap: 16 }}>
+      <div ref={scrollRef} style={{ height: 400, overflowY: 'auto', padding: '20px', display: 'flex', flexDirection: 'column', gap: 16 }}>
+        {isGenerating && (
+          <div style={{ textAlign: 'center', color: '#a5b4fc', fontSize: '13px', fontStyle: 'italic', padding: '20px' }}>
+            Gemini está generando una entrevista aleatoria en tiempo real...
+          </div>
+        )}
         <AnimatePresence>
           {messages.map((msg) => {
             const isBot = msg.role === 'model';
@@ -218,34 +242,6 @@ export default function SyntheticSimulator() {
             </div>
           </motion.div>
         )}
-      </div>
-
-      {/* Chat Input Footer */}
-      <div style={{ padding: '16px 20px', borderTop: '1px solid rgba(255,255,255,0.05)', background: 'rgba(0,0,0,0.2)' }}>
-        <form onSubmit={handleSend} style={{ display: 'flex', gap: 12 }}>
-          <input 
-            type="text" 
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            placeholder={`Habla con ${profile.name}...`}
-            disabled={isTyping}
-            style={{ 
-              flex: 1, background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.1)', 
-              borderRadius: 100, padding: '10px 16px', color: '#fff', fontSize: '13px', outline: 'none'
-            }}
-          />
-          <button 
-            type="submit" 
-            disabled={!input.trim() || isTyping}
-            style={{ 
-              background: input.trim() && !isTyping ? 'linear-gradient(135deg, #6366f1, #8b5cf6)' : 'rgba(255,255,255,0.1)', 
-              border: 'none', borderRadius: 100, width: 40, height: 40, display: 'flex', alignItems: 'center', justifyContent: 'center',
-              cursor: input.trim() && !isTyping ? 'pointer' : 'not-allowed', color: '#fff', transition: 'all 0.2s'
-            }}
-          >
-            ➤
-          </button>
-        </form>
       </div>
     </div>
   );
