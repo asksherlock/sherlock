@@ -72,9 +72,10 @@ function LogoImg({ client, index }) {
             maxWidth: 130, 
             maxHeight: 85, 
             objectFit: 'contain',
+            mixBlendMode: isHovered ? 'normal' : 'screen',
             filter: isHovered 
-              ? 'drop-shadow(0px 0px 12px rgba(255,255,255,0.4)) grayscale(0%) opacity(1)' 
-              : 'drop-shadow(0px 0px 4px rgba(255,255,255,0.2)) brightness(0) invert(1) opacity(0.7)',
+              ? 'drop-shadow(0px 0px 12px rgba(255,255,255,0.4))' 
+              : 'grayscale(100%) contrast(500%) invert(1) drop-shadow(0px 0px 4px rgba(255,255,255,0.2)) opacity(0.8)',
             transition: 'all 0.4s ease'
           }}
         />
