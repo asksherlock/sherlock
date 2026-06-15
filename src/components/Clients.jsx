@@ -7,7 +7,6 @@ const CLIENTS = [
   { name: 'Adidas', image: '/logos/logo-Adidas.png' }, 
   { name: 'Uber', image: '/logos/logo-Uber.png' }, 
   { name: 'Tec de Monterrey', image: '/logos/logo-TEC.png' }, 
-  { name: 'Bimbo', image: '/logos/Logo-GrupoBIMBO.png' }, 
   { name: 'SURA', image: '/logos/logo-Sura.png' }, 
   { name: 'PEMEX', image: '/logos/logo-Pemex.png' }, 
   { name: 'Coca-Cola', image: '/logos/logo-CocaCola.png' }, 
@@ -72,10 +71,9 @@ function LogoImg({ client, index }) {
             maxWidth: 130, 
             maxHeight: 85, 
             objectFit: 'contain',
-            mixBlendMode: 'screen',
             filter: isHovered 
-              ? 'grayscale(100%) contrast(500%) invert(1) drop-shadow(0px 0px 12px rgba(34,211,238,0.6)) drop-shadow(0px 0px 20px rgba(168,85,247,0.6)) opacity(1)' 
-              : 'grayscale(100%) contrast(500%) invert(1) drop-shadow(0px 0px 4px rgba(34,211,238,0.3)) drop-shadow(0px 0px 10px rgba(168,85,247,0.3)) opacity(0.8)',
+              ? 'brightness(0) invert(1) drop-shadow(0px 0px 12px rgba(34,211,238,0.6)) drop-shadow(0px 0px 20px rgba(168,85,247,0.6)) opacity(1)' 
+              : 'brightness(0) invert(1) drop-shadow(0px 0px 4px rgba(34,211,238,0.3)) drop-shadow(0px 0px 10px rgba(168,85,247,0.3)) opacity(0.8)',
             transition: 'all 0.4s ease'
           }}
         />
