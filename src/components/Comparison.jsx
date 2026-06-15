@@ -138,9 +138,9 @@ function ExpandableRow({ item, index }) {
 
       {/* Col 2: Tradicional Pill + Desc */}
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '6px 14px', background: 'rgba(255,255,255,0.03)', borderRadius: 8, border: '1px solid rgba(255,255,255,0.08)' }}>
-          <span style={{ color: '#64748b', fontSize: '12px', fontWeight: 900 }}>✕</span>
-          <span style={{ fontSize: '14px', color: '#cbd5e1', fontWeight: 500 }}>{item.tradicional}</span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <span style={{ color: '#ef4444', fontSize: '14px', fontWeight: 900 }}>✕</span>
+          <span style={{ fontSize: '15px', color: '#cbd5e1', fontWeight: 500 }}>{item.tradicional}</span>
         </div>
         <motion.div initial={false} animate={{ height: isHovered ? 'auto' : 0, opacity: isHovered ? 1 : 0 }} style={{ overflow: 'hidden' }}>
           <div style={{ paddingTop: 12, fontSize: '14px', color: '#64748b', lineHeight: 1.5 }}>{item.descTradicional}</div>
@@ -149,9 +149,9 @@ function ExpandableRow({ item, index }) {
 
       {/* Col 3: Sintético Pill + Desc */}
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '6px 14px', background: 'rgba(16,185,129,0.08)', borderRadius: 8, border: '1px solid rgba(16,185,129,0.2)' }}>
-          <span style={{ color: '#34d399', fontSize: '12px', fontWeight: 900 }}>✓</span>
-          <span style={{ fontSize: '14px', color: '#34d399', fontWeight: 600 }}>{item.sintetico}</span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <span style={{ color: '#10b981', fontSize: '14px', fontWeight: 900 }}>✓</span>
+          <span style={{ fontSize: '15px', color: '#34d399', fontWeight: 600 }}>{item.sintetico}</span>
         </div>
         <motion.div initial={false} animate={{ height: isHovered ? 'auto' : 0, opacity: isHovered ? 1 : 0 }} style={{ overflow: 'hidden' }}>
           <div style={{ paddingTop: 12, fontSize: '14px', color: '#10b981', opacity: 0.8, lineHeight: 1.5 }}>{item.descSintetico}</div>
@@ -166,38 +166,17 @@ export default function Comparison() {
     <section id="comparison" style={{ padding: '120px 24px', position: 'relative' }}>
       <div style={{ maxWidth: 1200, margin: '0 auto' }}>
         <motion.div initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }} style={{ textAlign: 'center', marginBottom: 80 }}>
-          <h2 style={{ fontSize: 'clamp(32px, 5vw, 56px)', fontWeight: 800, fontFamily: 'Space Grotesk, sans-serif', letterSpacing: '-0.02em', marginBottom: 16, background: 'linear-gradient(135deg, #f8fafc, #94a3b8)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
-            Usuarios Sintéticos vs Investigación Tradicional
+          <h2 style={{ fontSize: 'clamp(32px, 5vw, 56px)', fontWeight: 800, fontFamily: 'Space Grotesk, sans-serif', letterSpacing: '-0.02em', marginBottom: 16 }}>
+            <span style={{ color: '#94a3b8', fontSize: '0.8em' }}>Usuarios Reales</span>
+            <span style={{ color: '#475569', margin: '0 20px', fontSize: '0.5em', verticalAlign: 'middle' }}>VS</span>
+            <span style={{ background: 'linear-gradient(135deg, #a78bfa, #38bdf8)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Usuarios Sintéticos</span>
           </h2>
         </motion.div>
 
         <motion.div
           initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7 }}
-          style={{ width: '100%', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 24, background: 'rgba(255,255,255,0.01)', overflow: 'hidden' }}
+          style={{ width: '100%', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 24, background: 'rgba(15,23,42,0.4)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)', overflow: 'hidden' }}
         >
-          {/* Header */}
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 64, padding: '32px 48px', borderBottom: '1px solid rgba(255,255,255,0.1)', background: 'rgba(255,255,255,0.02)' }}>
-            <div style={{ fontSize: '14px', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Criterio</div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-              <div style={{ width: 32, height: 32, borderRadius: '50%', background: 'rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#94a3b8' }}>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-              </div>
-              <div>
-                <div style={{ fontSize: '16px', fontWeight: 700, color: '#f8fafc' }}>Investigación tradicional</div>
-                <div style={{ fontSize: '12px', color: '#64748b', marginTop: 2 }}>Reclutamiento + fieldwork</div>
-              </div>
-            </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-              <div style={{ width: 32, height: 32, borderRadius: '50%', background: 'rgba(16,185,129,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#10b981' }}>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-              </div>
-              <div>
-                <div style={{ fontSize: '16px', fontWeight: 700, color: '#f8fafc' }}>Ask Sherlock</div>
-                <div style={{ fontSize: '12px', color: '#64748b', marginTop: 2 }}>Usuarios sintéticos con IA</div>
-              </div>
-            </div>
-          </div>
-
           {/* Rows */}
           <div style={{ display: 'flex', flexDirection: 'column' }}>
             {COMPARISON_DATA.map((row, i) => (
