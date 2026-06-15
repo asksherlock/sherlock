@@ -91,7 +91,7 @@ function LogoImg({ client, index }) {
           {client.name.charAt(0)}
         </span>
       )}
-    </div>
+    </motion.div>
   );
 }
 
