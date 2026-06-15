@@ -124,7 +124,7 @@ export default function Clients() {
   }, []);
 
   return (
-    <section id="clients" style={{ padding: '120px 0', overflow: 'hidden', position: 'relative' }}>
+    <section id="clients" style={{ padding: '60px 0', overflow: 'hidden', position: 'relative' }}>
       {/* Edge fades */}
       {['left', 'right'].map(side => (
         <div key={side} style={{
@@ -135,18 +135,14 @@ export default function Clients() {
         }} />
       ))}
 
-      <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 24px', marginBottom: 80 }}>
+      <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 24px', marginBottom: 40 }}>
         <motion.div initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }} transition={{ duration: 0.6 }}
           style={{ textAlign: 'center' }}
         >
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '5px 14px', borderRadius: 100, background: 'rgba(16,185,129,0.08)', border: '1px solid rgba(16,185,129,0.2)', marginBottom: 20 }}>
-            <span style={{ fontSize: '11px', color: '#34d399', fontWeight: 600, letterSpacing: '0.08em' }}>
-              EMPRESAS QUE CONFÍAN EN SHERLOCK AI
-            </span>
-          </div>
-          <h2 style={{ fontSize: 'clamp(26px, 3.5vw, 44px)', fontWeight: 800, fontFamily: 'Space Grotesk, sans-serif', letterSpacing: '-0.02em', lineHeight: 1.2, marginBottom: 12, background: 'linear-gradient(135deg, #f8fafc, #94a3b8)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
-            Líderes de industria que ya conocen<br />a sus usuarios mejor que nunca
+          <h2 style={{ fontFamily: 'Space Grotesk, sans-serif', lineHeight: 1.1, marginBottom: 12 }}>
+            <span style={{ display: 'block', fontSize: 'clamp(18px, 2vw, 24px)', fontWeight: 400, color: '#64748b', letterSpacing: '0.02em', marginBottom: 4 }}>Organizaciones que confían en</span>
+            <span style={{ fontSize: 'clamp(32px, 4vw, 56px)', fontWeight: 900, letterSpacing: '-0.04em', background: 'linear-gradient(135deg, #f8fafc, #818cf8)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Ask Sherlock</span>
           </h2>
         </motion.div>
       </div>
