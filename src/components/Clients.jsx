@@ -25,6 +25,7 @@ const DOUBLED_REV = [...CLIENTS, ...CLIENTS, ...CLIENTS].reverse();
 
 function LogoImg({ client, index }) {
   const [error, setError] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
   const logoUrl = client.image;
 
   // Onda más larga y suave para efecto de flotación (gravedad)
@@ -48,16 +49,18 @@ function LogoImg({ client, index }) {
         position: 'relative',
         zIndex: 10,
       }}
-        onMouseEnter={e => {
-          e.currentTarget.style.transform = `translate3d(0, ${yOffset - 5}px, 0) scale(1.1)`;
-          e.currentTarget.style.zIndex = 20;
-        }}
-        onMouseLeave={e => {
-          e.currentTarget.style.transform = `translate3d(0, ${yOffset}px, 0) scale(1)`;
-          e.currentTarget.style.zIndex = 10;
-        }}
-      >
-        {!error ? (
+      onMouseEnter={e => {
+        setIsHovered(true);
+        e.currentTarget.style.transform = `translate3d(0, ${yOffset - 5}px, 0) scale(1.1)`;
+        e.currentTarget.style.zIndex = 20;
+      }}
+      onMouseLeave={e => {
+        setIsHovered(false);
+        e.currentTarget.style.transform = `translate3d(0, ${yOffset}px, 0) scale(1)`;
+        e.currentTarget.style.zIndex = 10;
+      }}
+    >
+      {!error ? (
         <img 
           className="client-logo-img"
           src={logoUrl} 
@@ -66,10 +69,13 @@ function LogoImg({ client, index }) {
           style={{ 
             width: '100%', 
             height: '100%', 
-            maxWidth: 130, // Increased max-width
-            maxHeight: 85, // Increased max-height
+            maxWidth: 130, 
+            maxHeight: 85, 
             objectFit: 'contain',
-            filter: 'drop-shadow(0px 0px 8px rgba(255,255,255,0.15))'
+            filter: isHovered 
+              ? 'drop-shadow(0px 0px 8px rgba(255,255,255,0.2)) grayscale(0%) opacity(1)' 
+              : 'drop-shadow(0px 0px 4px rgba(255,255,255,0.1)) grayscale(100%) opacity(0.6) brightness(1.2)',
+            transition: 'all 0.4s ease'
           }}
         />
       ) : (
