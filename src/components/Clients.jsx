@@ -27,37 +27,41 @@ function LogoImg({ client, index }) {
   const [isHovered, setIsHovered] = useState(false);
   const logoUrl = client.image;
 
-  // Onda más larga y suave para efecto de flotación (gravedad)
-  const yOffset = Math.sin(index * 0.4) * 80;
-
   return (
-    <div
+    <motion.div
       className="logo-container"
+      animate={isHovered ? {
+        y: -10,
+        scale: 1.15,
+        rotate: 0,
+      } : {
+        y: [-10, 10, -10],
+        rotate: [-3, 3, -3],
+        scale: 1,
+      }}
+      transition={isHovered ? {
+        type: "spring",
+        stiffness: 300,
+        damping: 20
+      } : {
+        duration: 6,
+        repeat: Infinity,
+        ease: "easeInOut",
+        delay: (index % 10) * 0.4
+      }}
       style={{
         flexShrink: 0,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        width: 170, // Increased size
+        width: 170, 
         height: 170,
-        borderRadius: '50%',
-        background: 'radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%)', // Difuminada silueta
-        transition: 'all 0.3s',
         cursor: 'default',
-        transform: `translate3d(0, ${yOffset}px, 0)`,
         position: 'relative',
-        zIndex: 10,
+        zIndex: isHovered ? 20 : 10,
       }}
-      onMouseEnter={e => {
-        setIsHovered(true);
-        e.currentTarget.style.transform = `translate3d(0, ${yOffset - 5}px, 0) scale(1.1)`;
-        e.currentTarget.style.zIndex = 20;
-      }}
-      onMouseLeave={e => {
-        setIsHovered(false);
-        e.currentTarget.style.transform = `translate3d(0, ${yOffset}px, 0) scale(1)`;
-        e.currentTarget.style.zIndex = 10;
-      }}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
     >
       {!error ? (
         <img 
