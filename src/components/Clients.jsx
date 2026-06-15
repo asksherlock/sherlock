@@ -73,8 +73,8 @@ function LogoImg({ client, index }) {
             maxHeight: 85, 
             objectFit: 'contain',
             filter: isHovered 
-              ? 'drop-shadow(0px 0px 8px rgba(255,255,255,0.2)) grayscale(0%) opacity(1)' 
-              : 'drop-shadow(0px 0px 4px rgba(255,255,255,0.1)) grayscale(100%) opacity(0.6) brightness(1.2)',
+              ? 'drop-shadow(0px 0px 12px rgba(255,255,255,0.4)) grayscale(0%) opacity(1)' 
+              : 'drop-shadow(0px 0px 4px rgba(255,255,255,0.2)) brightness(0) invert(1) opacity(0.7)',
             transition: 'all 0.4s ease'
           }}
         />
