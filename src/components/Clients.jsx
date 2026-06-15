@@ -124,7 +124,7 @@ export default function Clients() {
   }, []);
 
   return (
-    <section id="clients" style={{ padding: '60px 0', overflow: 'hidden', position: 'relative' }}>
+    <section id="clients" style={{ padding: '48px 0', overflow: 'hidden', position: 'relative', background: 'rgba(0, 0, 0, 0.4)', borderTop: '1px solid rgba(255,255,255,0.02)', borderBottom: '1px solid rgba(255,255,255,0.02)' }}>
       {/* Edge fades */}
       {['left', 'right'].map(side => (
         <div key={side} style={{
@@ -135,20 +135,19 @@ export default function Clients() {
         }} />
       ))}
 
-      <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 24px', marginBottom: 40 }}>
-        <motion.div initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }}
+      <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 24px', marginBottom: 24 }}>
+        <motion.div initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }} transition={{ duration: 0.6 }}
           style={{ textAlign: 'center' }}
         >
-          <h2 style={{ fontFamily: 'Space Grotesk, sans-serif', lineHeight: 1.1, marginBottom: 12 }}>
-            <span style={{ display: 'block', fontSize: 'clamp(18px, 2vw, 24px)', fontWeight: 400, color: '#64748b', letterSpacing: '0.02em', marginBottom: 4 }}>Organizaciones que confían en</span>
-            <span style={{ fontSize: 'clamp(32px, 4vw, 56px)', fontWeight: 900, letterSpacing: '-0.04em', background: 'linear-gradient(135deg, #f8fafc, #818cf8)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Ask Sherlock</span>
+          <h2 style={{ fontSize: '12px', fontWeight: 700, color: '#64748b', letterSpacing: '0.2em', textTransform: 'uppercase', margin: 0 }}>
+            Organizaciones que confían en Ask Sherlock
           </h2>
         </motion.div>
       </div>
 
       {/* Snake / Wave Row */}
-      <div style={{ overflow: 'hidden', padding: '100px 0' }}>
+      <div style={{ overflow: 'hidden', padding: '20px 0 40px 0' }}>
         <div ref={rowRef} style={{ display: 'flex', gap: 24, width: 'max-content', alignItems: 'center' }}>
           {/* We multiply the array to make sure the wave is long enough to infinitely scroll seamlessly */}
           {[...CLIENTS, ...CLIENTS, ...CLIENTS, ...CLIENTS, ...CLIENTS].map((c, i) => (
