@@ -110,6 +110,8 @@ export default function StarfieldBackground() {
         let angle = 0;
         let isActiveRipple = false;
 
+        let opacity = 0.4 + Math.sin(p.phase * 2) * 0.4; // Fading twinkle effect
+
         // Mouse repulsion (Softer and subtler)
         const dxMouse = targetX - mx;
         const dyMouse = targetY - my;
@@ -142,7 +144,6 @@ export default function StarfieldBackground() {
 
         // Draw particle
         const [rC, gC, bC] = p.color;
-        const opacity = 0.4 + Math.sin(p.phase * 2) * 0.4; // Fading twinkle effect
 
         ctx.save();
         ctx.translate(targetX, targetY);

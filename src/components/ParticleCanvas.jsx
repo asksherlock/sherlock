@@ -245,25 +245,72 @@ export default function ParticleCanvas() {
       let targetX = x;
       let targetY = y;
 
-      // Match Capa 1 exactly
-      const isBright = Math.random() > 0.85; 
-      const isCyan = Math.random() > 0.90;
-      const isPurple = Math.random() > 0.80 && !isCyan;
+      // Palette and depth based on the latest cosmic reference image
+      const r = Math.random();
       
-      let color = [79, 70, 229]; // #4f46e5 base indigo
-      if (isBright) color = [255, 255, 255];
-      if (isCyan) color = [34, 211, 238];
-      if (isPurple) color = [167, 139, 250];
+      // Base: 3 Tonos (Azules y Morado)
+      const baseRand = Math.random();
+      let color = [59, 130, 246]; // 45%: Azul brillante
+      if (baseRand > 0.75) {
+        color = [139, 92, 246]; // 25%: Logo Morado (#8b5cf6)
+      } else if (baseRand > 0.45) {
+        color = [96, 165, 250]; // 30%: Azul claro
+      }
+      
+      // Size distribution: Micro, Small, and Medium
+      const sizeRand = Math.random();
+      let radius;
+      if (sizeRand > 0.70) {
+        radius = randomBetween(1.1, 1.6); // 30% Medio
+      } else if (sizeRand > 0.20) {
+        radius = randomBetween(0.6, 1.0); // 50% Pequeño
+      } else {
+        radius = randomBetween(0.2, 0.5); // 20% Muy pequeño (micro)
+      }
+      
+      // Extreme variance in opacity for the dust: translucent to completely solid
+      let alpha = Math.random();
+      if (alpha < 0.3) alpha = randomBetween(0.05, 0.2); // Muy traslucidas
+      else if (alpha > 0.8) alpha = randomBetween(0.85, 1.0); // Muy solidas/brillosas
+      else alpha = randomBetween(0.2, 0.8); // Medio
+
+      if (r > 0.98) {
+        // Bright Purple/Violet (2%) - Logo Purple
+        color = [139, 92, 246]; 
+        radius = randomBetween(2.0, 3.2);
+        alpha = randomBetween(0.9, 1.0); 
+      } else if (r > 0.965) {
+        // MUY BRILLOSAS BLANCAS (1.5% - Reducido)
+        color = [255, 255, 255];
+        radius = randomBetween(2.5, 4.0); // Más grandes
+        alpha = 1.0; // Opacidad máxima
+      } else if (r > 0.93) {
+        // Estrellas Azules Radiantes (3.5%) - Brillantes y grandes
+        color = [96, 165, 250]; // Azul claro brillante
+        radius = randomBetween(2.0, 3.5); // Más grandes para que destaquen
+        alpha = 1.0; // Opacidad máxima
+      } else if (r > 0.90) {
+        // Cyan accents (3%)
+        color = [34, 211, 238];
+        radius = randomBetween(1.5, 2.2);
+        alpha = randomBetween(0.7, 0.9); 
+      } else if (r > 0.85) {
+        // Faint Grey/White (5% Large blurry depth)
+        color = [200, 200, 200];
+        radius = randomBetween(2.5, 4.0);
+        alpha = randomBetween(0.05, 0.15); // Extremadamente traslucidas
+      }
 
       return {
         x, y,
+        vx: 0, vy: 0, // Inercia para transiciones suaves
         baseX: x, baseY: y, // Currently moving nowhere (scattered)
         targetX, targetY,   // Where they need to go later
-        radius: randomBetween(1.0, 1.8), 
+        radius, 
         color,
-        alpha: randomBetween(0.7, 1.0), 
+        alpha, 
         phase: randomBetween(0, Math.PI * 2), 
-        floatSpeed: randomBetween(0.01, 0.03) 
+        floatSpeed: randomBetween(0.005, 0.015) // Flotación más lenta y suave
       };
     });
   }, []);
@@ -284,25 +331,68 @@ export default function ParticleCanvas() {
     resize();
     window.addEventListener('resize', resize);
     
-    // Dynamic Morphing Logic
+    // Dynamic Morphing Logic (Sequenced Timeline)
     const shapes = ['grafica', 'lupa', 'ai', 'lentes_retro', 'robot', 'usuario'];
     let shapeIndex = 0;
+    let isRunning = true;
     
-    const morphInterval = setInterval(() => {
-      const nextShape = shapes[shapeIndex % shapes.length];
-      shapeIndex++;
+    const runMorphSequence = () => {
+      if (!isRunning) return;
       
-      const newPoints = getShapePoints(nextShape, w, h);
-      if (newPoints.length === 0) return;
-      
-      const particles = particlesRef.current;
-      
-      for (let i = 0; i < PARTICLE_COUNT; i++) {
-        const targetPt = newPoints[Math.floor(Math.random() * newPoints.length)];
-        particles[i].baseX = targetPt.x;
-        particles[i].baseY = targetPt.y;
-      }
-    }, 10000); // Morph every 10 seconds
+      // 1. Visible for 8 seconds
+      setTimeout(() => {
+        if (!isRunning) return;
+        
+        // 2. Start global fade out (Toma ~4.5 segundos en total)
+        const particles = particlesRef.current;
+        for (let i = 0; i < PARTICLE_COUNT; i++) {
+          particles[i].morphingOut = true;
+          particles[i].morphDelay = Math.random() * 180; // Hasta 3s de delay escalonado
+        }
+        
+        // 3. Wait for all to fade out (3s delay + 1.5s fade out = 4.5s)
+        setTimeout(() => {
+          if (!isRunning) return;
+          
+          // 4. Stay in complete darkness for 2 seconds
+          setTimeout(() => {
+            if (!isRunning) return;
+            
+            // 5. Pick next shape and teleport particles while dark
+            const nextShape = shapes[shapeIndex % shapes.length];
+            shapeIndex++;
+            const newPoints = getShapePoints(nextShape, w, h);
+            
+            for (let i = 0; i < PARTICLE_COUNT; i++) {
+              if (newPoints.length > 0) {
+                const targetPt = newPoints[Math.floor(Math.random() * newPoints.length)];
+                particles[i].baseX = targetPt.x;
+                particles[i].baseY = targetPt.y;
+                
+                // Teleport instantáneo en la oscuridad
+                particles[i].x = particles[i].baseX + (Math.random() - 0.5) * 50; 
+                particles[i].y = particles[i].baseY + (Math.random() - 0.5) * 50;
+                particles[i].vx = 0; particles[i].vy = 0;
+              }
+              // Start fade in (Toma ~4.5 segundos en total)
+              particles[i].fadingIn = true;
+              particles[i].morphDelay = Math.random() * 180; // Hasta 3s de delay escalonado
+            }
+            
+            // 6. Wait for fade in to finish (4.5s) before resetting cycle
+            setTimeout(() => {
+              if (isRunning) runMorphSequence();
+            }, 4500);
+            
+          }, 4000); // 4 seconds of darkness (vacío)
+          
+        }, 4500); // Wait 4.5s for fade out sequence
+        
+      }, 4000); // 4 seconds of visibility (estático)
+    };
+    
+    // Start the infinite sequence
+    runMorphSequence();
     
     // Click for Shockwave
     const onClick = (e) => {
@@ -414,12 +504,47 @@ export default function ParticleCanvas() {
           }
         }
 
-        // Smoothly interpolate towards base/target (lowered factor for slow, graceful movement)
-        p.x += (targetX - p.x) * 0.015;
-        p.y += (targetY - p.y) * 0.015;
+        // Spring physics para un movimiento y transición increíblemente suave (inercia)
+        const ax = (targetX - p.x) * 0.015;
+        const ay = (targetY - p.y) * 0.015;
+        
+        p.vx += ax;
+        p.vy += ay;
+        
+        // Fricción para que se deslice suavemente
+        p.vx *= 0.88;
+        p.vy *= 0.88;
+        
+        p.x += p.vx;
+        p.y += p.vy;
 
-        // Draw particle
-        const currentAlpha = p.alpha * (0.7 + Math.sin(p.phase * 2) * 0.3);
+        // Lógica de desvanecimiento global coreografiada
+        if (p.currentAlphaMultiplier === undefined) p.currentAlphaMultiplier = 1;
+        
+        if (p.morphingOut) {
+          if (p.morphDelay > 0) {
+            p.morphDelay--;
+          } else {
+            p.currentAlphaMultiplier -= 0.01; // Lento y suave (1.6s fade real)
+            if (p.currentAlphaMultiplier <= 0) {
+              p.currentAlphaMultiplier = 0;
+              p.morphingOut = false;
+            }
+          }
+        } else if (p.fadingIn) {
+          if (p.morphDelay > 0) {
+            p.morphDelay--;
+          } else {
+            p.currentAlphaMultiplier += 0.01; // Lento y suave (1.6s fade real)
+            if (p.currentAlphaMultiplier >= 1) {
+              p.currentAlphaMultiplier = 1;
+              p.fadingIn = false;
+            }
+          }
+        }
+
+        // Draw particle con transición de luz más lenta y multiplicador de desvanecimiento
+        const currentAlpha = p.alpha * (0.75 + Math.sin(p.phase * 0.8) * 0.25) * p.currentAlphaMultiplier;
         const [r, g, b] = p.color;
 
         ctx.save();
@@ -450,8 +575,8 @@ export default function ParticleCanvas() {
     draw();
 
     return () => {
+      isRunning = false;
       cancelAnimationFrame(animRef.current);
-      clearInterval(morphInterval);
       window.removeEventListener('resize', resize);
       window.removeEventListener('click', onClick);
       window.removeEventListener('mousemove', onMouseMove);
