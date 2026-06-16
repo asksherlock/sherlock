@@ -64,7 +64,7 @@ export default function StarfieldBackground() {
       });
     };
     
-    // Track mouse for local repulsion
+    // Track mouse for local attraction
     let mx = -9999, my = -9999;
     const onMouseMove = (e) => {
       mx = e.clientX;
@@ -112,14 +112,20 @@ export default function StarfieldBackground() {
 
         let opacity = 0.4 + Math.sin(p.phase * 2) * 0.4; // Fading twinkle effect
 
-        // Mouse repulsion (Softer and subtler)
+        // Mouse repulsion (Empuje muy suave y elegante)
         const dxMouse = targetX - mx;
         const dyMouse = targetY - my;
         const distMouse = Math.sqrt(dxMouse * dxMouse + dyMouse * dyMouse);
-        if (distMouse < 100) {
-          const force = (100 - distMouse) / 100;
-          targetX += (dxMouse / distMouse) * force * 15; // Reduced from 60 to 15
-          targetY += (dyMouse / distMouse) * force * 15;
+        if (distMouse < 280) {
+          // Curva cuadrática para una transición fluida y sin saltos bruscos
+          const force = Math.pow((280 - distMouse) / 280, 2);
+          
+          // Empuje (repulsión) extremadamente leve, como mover agua o aire
+          targetX += (dxMouse / distMouse) * force * 5; 
+          targetY += (dyMouse / distMouse) * force * 5;
+          
+          // Ligero brillo al ser empujadas
+          opacity = Math.min(1.0, opacity + force * 0.25);
         }
 
         // Apply shockwave physics

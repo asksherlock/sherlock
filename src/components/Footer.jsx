@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 export default function Footer() {
   return (
@@ -46,34 +47,62 @@ export default function Footer() {
             {[
               {
                 title: 'PLATAFORMA',
-                links: ['Características', 'Cómo funciona', 'Casos de uso', 'Integraciones']
+                links: [
+                  { label: 'Características', href: '#' },
+                  { label: 'Cómo funciona', href: '#' },
+                  { label: 'Casos de uso', href: '#' },
+                  { label: 'Integraciones', href: '#' }
+                ]
               },
               {
                 title: 'EMPRESA',
-                links: ['Sobre nosotros', 'Blog', 'Clientes', 'Contacto']
+                links: [
+                  { label: 'Sobre nosotros', href: '#' },
+                  { label: 'Blog', href: '#' },
+                  { label: 'Clientes', href: '#' },
+                  { label: 'Contacto', href: '#' }
+                ]
               },
               {
                 title: 'LEGAL',
-                links: ['Privacidad', 'Términos', 'Cookies']
+                links: [
+                  { label: 'Aviso de Privacidad', to: '/aviso-de-privacidad' },
+                  { label: 'Términos', href: '#' },
+                  { label: 'Cookies', href: '#' }
+                ]
               }
             ].map((col, idx) => (
               <div key={idx} style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
                 <span style={{ fontSize: '13px', fontWeight: 800, color: '#475569', letterSpacing: '0.08em' }}>{col.title}</span>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-                  {col.links.map(link => (
-                    <a key={link} href="#" style={{
+                  {col.links.map(link => {
+                    const linkStyle = {
                       color: '#64748b',
                       textDecoration: 'none',
                       fontSize: '15px',
                       fontWeight: 500,
                       transition: 'color 0.2s ease',
-                    }}
-                    onMouseEnter={e => e.target.style.color = '#f8fafc'}
-                    onMouseLeave={e => e.target.style.color = '#64748b'}
-                    >
-                      {link}
-                    </a>
-                  ))}
+                    };
+                    
+                    if (link.to) {
+                      return (
+                        <Link key={link.label} to={link.to} style={linkStyle}
+                          onMouseEnter={e => e.target.style.color = '#f8fafc'}
+                          onMouseLeave={e => e.target.style.color = '#64748b'}
+                        >
+                          {link.label}
+                        </Link>
+                      );
+                    }
+                    return (
+                      <a key={link.label} href={link.href} style={linkStyle}
+                        onMouseEnter={e => e.target.style.color = '#f8fafc'}
+                        onMouseLeave={e => e.target.style.color = '#64748b'}
+                      >
+                        {link.label}
+                      </a>
+                    );
+                  })}
                 </div>
               </div>
             ))}
