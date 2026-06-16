@@ -481,8 +481,10 @@ export default function ParticleCanvas() {
         // Mouse repulsion
         const dxMouse = p.x - mx;
         const dyMouse = p.y - my;
-        const distMouse = Math.sqrt(dxMouse * dxMouse + dyMouse * dyMouse);
-        if (distMouse < 150) {
+        const distSq = dxMouse * dxMouse + dyMouse * dyMouse;
+        
+        if (distSq < 22500) { // 150 * 150
+          const distMouse = Math.sqrt(distSq);
           const force = (150 - distMouse) / 150;
           targetX += (dxMouse / distMouse) * force * 60;
           targetY += (dyMouse / distMouse) * force * 60;
@@ -492,19 +494,23 @@ export default function ParticleCanvas() {
         for (const r of ripples) {
           const dx = p.x - r.x;
           const dy = p.y - r.y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
+          const distSq = dx * dx + dy * dy;
           
-          const waveDist = Math.abs(dist - r.radius);
-          
-          if (waveDist < r.width) {
-            isActiveRipple = true;
-            angle = Math.atan2(dy, dx);
+          const rMax = r.radius + r.width;
+          if (distSq < rMax * rMax) {
+            const dist = Math.sqrt(distSq);
+            const waveDist = Math.abs(dist - r.radius);
             
-            const force = (r.width - waveDist) / r.width;
-            targetX += Math.cos(angle) * force * 40;
-            targetY += Math.sin(angle) * force * 40;
-            
-            stretch = Math.max(stretch, 1 + (r.radius * force * 0.015));
+            if (waveDist < r.width) {
+              isActiveRipple = true;
+              angle = Math.atan2(dy, dx);
+              
+              const force = (r.width - waveDist) / r.width;
+              targetX += Math.cos(angle) * force * 40;
+              targetY += Math.sin(angle) * force * 40;
+              
+              stretch = Math.max(stretch, 1 + (r.radius * force * 0.015));
+            }
           }
         }
 
@@ -569,6 +575,7 @@ export default function ParticleCanvas() {
             const pulse = Math.abs(Math.sin(p.phase * 4));
             const dynAlpha = currentAlpha * (0.2 + pulse * 0.8);
             const dynRadius = p.radius * (0.6 + pulse * 0.6);
+            
             ctx.beginPath();
             ctx.arc(0, 0, dynRadius, 0, Math.PI * 2);
             ctx.fillStyle = `rgba(${r},${g},${b},${dynAlpha})`;

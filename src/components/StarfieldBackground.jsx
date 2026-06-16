@@ -23,10 +23,16 @@ export default function StarfieldBackground() {
       if (isCyan) color = [34, 211, 238];
       if (isPurple) color = [167, 139, 250];
 
+      const initialX = randomBetween(0, w);
+      const initialY = randomBetween(0, h);
+      
       return {
-        x: randomBetween(0, w),
-        y: randomBetween(0, h),
-        baseY: randomBetween(0, h), // Used to track infinite scroll
+        x: initialX,
+        y: initialY,
+        baseX: initialX,
+        baseY: initialY,
+        vx: 0,
+        vy: 0,
         size,
         color,
         speedY: randomBetween(0.1, 0.5), // Upward floating speed
@@ -94,17 +100,22 @@ export default function StarfieldBackground() {
         const p = particles[i];
         
         // Infinite vertical upward scroll
-        p.y -= p.speedY;
-        if (p.y < -50) {
-          p.y = h + 50;
-          p.x = randomBetween(0, w); // re-randomize X when looping
+        p.baseY -= p.speedY;
+        if (p.baseY < -50) {
+          p.baseY = h + 50;
+          p.baseX = randomBetween(0, w); // re-randomize X when looping
+          // Reset physical state to prevent dragging across the screen
+          p.x = p.baseX;
+          p.y = p.baseY;
+          p.vx = 0;
+          p.vy = 0;
         }
 
         p.phase += p.floatSpeed; 
 
         // Base physics targets
-        let targetX = p.x + Math.sin(p.phase) * 10;
-        let targetY = p.y;
+        let targetX = p.baseX + Math.sin(p.phase) * 10;
+        let targetY = p.baseY;
         
         let stretch = 1;
         let angle = 0;
@@ -113,48 +124,70 @@ export default function StarfieldBackground() {
         let opacity = 0.4 + Math.sin(p.phase * 2) * 0.4; // Fading twinkle effect
 
         // Mouse repulsion (Empuje muy suave y elegante)
-        const dxMouse = targetX - mx;
-        const dyMouse = targetY - my;
-        const distMouse = Math.sqrt(dxMouse * dxMouse + dyMouse * dyMouse);
-        if (distMouse < 280) {
+        const dxMouse = p.x - mx; // Note: Use physical position p.x instead of targetX for calculation
+        const dyMouse = p.y - my;
+        const distSq = dxMouse * dxMouse + dyMouse * dyMouse;
+        
+        // Fast pre-check using squared distance (300 * 300 = 90000)
+        if (distSq < 90000) { 
+          const distMouse = Math.sqrt(distSq);
+          
           // Curva cuadrática para una transición fluida y sin saltos bruscos
-          const force = Math.pow((280 - distMouse) / 280, 2);
+          const force = Math.pow((300 - distMouse) / 300, 2);
           
-          // Empuje (repulsión) extremadamente leve, como mover agua o aire
-          targetX += (dxMouse / distMouse) * force * 5; 
-          targetY += (dyMouse / distMouse) * force * 5;
+          // Empuje más notorio pero manteniendo la inercia del fluido
+          targetX += (dxMouse / distMouse) * force * 25; 
+          targetY += (dyMouse / distMouse) * force * 25;
           
-          // Ligero brillo al ser empujadas
-          opacity = Math.min(1.0, opacity + force * 0.25);
+          // Brillo que acompaña el empuje
+          opacity = Math.min(1.0, opacity + force * 0.4);
         }
 
         // Apply shockwave physics
         for (const r of ripples) {
-          const dx = targetX - r.x;
-          const dy = targetY - r.y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
+          const dx = p.x - r.x; // Use physical position
+          const dy = p.y - r.y;
+          const distSq = dx * dx + dy * dy;
           
-          const waveDist = Math.abs(dist - r.radius);
-          
-          if (waveDist < r.width) {
-            isActiveRipple = true;
-            angle = Math.atan2(dy, dx);
+          // Fast pre-check
+          const rMax = r.radius + r.width;
+          if (distSq < rMax * rMax) {
+            const dist = Math.sqrt(distSq);
+            const waveDist = Math.abs(dist - r.radius);
             
-            const force = (r.width - waveDist) / r.width;
-            targetX += Math.cos(angle) * force * 40;
-            targetY += Math.sin(angle) * force * 40;
-            
-            stretch = Math.max(stretch, 1 + (r.radius * force * 0.015));
+            if (waveDist < r.width) {
+              isActiveRipple = true;
+              angle = Math.atan2(dy, dx);
+              
+              const force = (r.width - waveDist) / r.width;
+              targetX += Math.cos(angle) * force * 40;
+              targetY += Math.sin(angle) * force * 40;
+              
+              stretch = Math.max(stretch, 1 + (r.radius * force * 0.015));
+            }
           }
         }
+
+        // Spring physics para un movimiento fluido y suave
+        const ax = (targetX - p.x) * 0.015;
+        const ay = (targetY - p.y) * 0.015;
+        
+        p.vx += ax;
+        p.vy += ay;
+        
+        // Fricción para deslizarse con inercia
+        p.vx *= 0.88;
+        p.vy *= 0.88;
+        
+        p.x += p.vx;
+        p.y += p.vy;
 
         // Draw particle
         const [rC, gC, bC] = p.color;
 
         ctx.save();
-        ctx.translate(targetX, targetY);
-        
-        // Performance optimization: only apply shadow to very bright/large particles
+        ctx.translate(p.x, p.y); // Draw at physical location
+
         if (p.size > 2.5) {
           ctx.shadowBlur = p.size * 2;
           ctx.shadowColor = `rgba(${rC},${gC},${bC},1)`;
@@ -175,6 +208,8 @@ export default function StarfieldBackground() {
           ctx.fillStyle = `rgba(${rC},${gC},${bC},${opacity})`;
           ctx.fill();
         }
+        
+        ctx.shadowBlur = 0; // reset
         
         ctx.restore();
       }
