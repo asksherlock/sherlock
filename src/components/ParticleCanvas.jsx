@@ -1,6 +1,6 @@
 import { useEffect, useRef, useCallback } from 'react';
 
-const PARTICLE_COUNT = 4000; // Max density for super crisp outlines
+const PARTICLE_COUNT = 4500; // Optimizado para rendimiento, densidad media-alta
 
 function randomBetween(a, b) { return a + Math.random() * (b - a); }
 
@@ -248,57 +248,60 @@ export default function ParticleCanvas() {
       // Palette and depth based on the latest cosmic reference image
       const r = Math.random();
       
-      // Base: 3 Tonos (Azules y Morado)
+      // Base: Tonos de la imagen (Cyan, Morado oscuro, Azul claro, y blanco tenue)
       const baseRand = Math.random();
-      let color = [59, 130, 246]; // 45%: Azul brillante
-      if (baseRand > 0.75) {
-        color = [139, 92, 246]; // 25%: Logo Morado (#8b5cf6)
-      } else if (baseRand > 0.45) {
+      let color;
+      if (baseRand > 0.8) {
+        color = [34, 211, 238]; // 20%: Cyan brillante
+      } else if (baseRand > 0.5) {
+        color = [90, 40, 160]; // 30%: Morado oscuro/profundo
+      } else if (baseRand > 0.2) {
         color = [96, 165, 250]; // 30%: Azul claro
+      } else {
+        color = [180, 180, 190]; // 20%: Gris/Blanco tenue para profundidad
       }
       
-      // Size distribution: Micro, Small, and Medium
+      let isSparkle = false;
+
+      // Size distribution: 70% tamaño medio para que sean más visibles sin sobrecargar
       const sizeRand = Math.random();
       let radius;
-      if (sizeRand > 0.70) {
-        radius = randomBetween(1.1, 1.6); // 30% Medio
-      } else if (sizeRand > 0.20) {
-        radius = randomBetween(0.6, 1.0); // 50% Pequeño
+      if (sizeRand > 0.95) {
+        radius = randomBetween(1.4, 2.0); // 5% Grandes
+      } else if (sizeRand > 0.25) {
+        radius = randomBetween(0.7, 1.2); // 70% Medios (El nuevo tamaño base solicitado)
       } else {
-        radius = randomBetween(0.2, 0.5); // 20% Muy pequeño (micro)
+        radius = randomBetween(0.3, 0.6); // 25% Pequeños
       }
       
-      // Extreme variance in opacity for the dust: translucent to completely solid
+      // Opacity: Gran cantidad de polvo tenue al fondo, y puntos muy brillantes al frente
       let alpha = Math.random();
-      if (alpha < 0.3) alpha = randomBetween(0.05, 0.2); // Muy traslucidas
-      else if (alpha > 0.8) alpha = randomBetween(0.85, 1.0); // Muy solidas/brillosas
-      else alpha = randomBetween(0.2, 0.8); // Medio
+      if (alpha < 0.6) alpha = randomBetween(0.05, 0.3); // 60% Polvo muy tenue
+      else if (alpha > 0.85) alpha = randomBetween(0.85, 1.0); // 15% Sólidas brillantes
+      else alpha = randomBetween(0.3, 0.6); // 25% Medio
 
-      if (r > 0.98) {
-        // Bright Purple/Violet (2%) - Logo Purple
-        color = [139, 92, 246]; 
-        radius = randomBetween(2.0, 3.2);
-        alpha = randomBetween(0.9, 1.0); 
-      } else if (r > 0.965) {
-        // MUY BRILLOSAS BLANCAS (1.5% - Reducido)
+      // Accentos especiales (Puntos definidos de la imagen)
+      if (r > 0.99) {
+        // FAROS BLANCOS (1%) - Las estrellas blancas brillantes con glow
         color = [255, 255, 255];
-        radius = randomBetween(2.5, 4.0); // Más grandes
-        alpha = 1.0; // Opacidad máxima
+        radius = randomBetween(1.8, 2.8);
+        alpha = 1.0; 
+      } else if (r > 0.96) {
+        // Puntos Azules/Cyan Sólidos (3%)
+        color = Math.random() > 0.5 ? [34, 211, 238] : [59, 130, 246];
+        radius = randomBetween(1.2, 2.0); 
+        alpha = randomBetween(0.9, 1.0);
       } else if (r > 0.93) {
-        // Estrellas Azules Radiantes (3.5%) - Brillantes y grandes
-        color = [96, 165, 250]; // Azul claro brillante
-        radius = randomBetween(2.0, 3.5); // Más grandes para que destaquen
-        alpha = 1.0; // Opacidad máxima
-      } else if (r > 0.90) {
-        // Cyan accents (3%)
-        color = [34, 211, 238];
-        radius = randomBetween(1.5, 2.2);
-        alpha = randomBetween(0.7, 0.9); 
-      } else if (r > 0.85) {
-        // Faint Grey/White (5% Large blurry depth)
-        color = [200, 200, 200];
-        radius = randomBetween(2.5, 4.0);
-        alpha = randomBetween(0.05, 0.15); // Extremadamente traslucidas
+        // Puntos Morados Sólidos (3%)
+        color = [139, 92, 246]; 
+        radius = randomBetween(1.2, 2.0); 
+        alpha = randomBetween(0.9, 1.0); 
+      } else if (r > 0.91) {
+        // Destellos Blancos Cálidos Elegantes (2%)
+        color = [253, 245, 230]; 
+        radius = randomBetween(0.8, 1.5);
+        alpha = 1.0; 
+        isSparkle = true;
       }
 
       return {
@@ -309,6 +312,7 @@ export default function ParticleCanvas() {
         radius, 
         color,
         alpha, 
+        isSparkle,
         phase: randomBetween(0, Math.PI * 2), 
         floatSpeed: randomBetween(0.005, 0.015) // Flotación más lenta y suave
       };
@@ -560,10 +564,33 @@ export default function ParticleCanvas() {
           ctx.fill();
         } else {
           // Clean, simple dot
-          ctx.beginPath();
-          ctx.arc(0, 0, p.radius, 0, Math.PI * 2);
-          ctx.fillStyle = `rgba(${r},${g},${b},${currentAlpha})`;
-          ctx.fill();
+          if (p.isSparkle) {
+            // Destellos blancos cálidos que parpadean agresivamente
+            const pulse = Math.abs(Math.sin(p.phase * 4));
+            const dynAlpha = currentAlpha * (0.2 + pulse * 0.8);
+            const dynRadius = p.radius * (0.6 + pulse * 0.6);
+            ctx.beginPath();
+            ctx.arc(0, 0, dynRadius, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(${r},${g},${b},${dynAlpha})`;
+            ctx.shadowBlur = dynRadius * 3;
+            ctx.shadowColor = `rgba(${r},${g},${b},${dynAlpha})`;
+            ctx.fill();
+            ctx.shadowBlur = 0; // reset
+          } else {
+            // Clean, simple dot
+            ctx.beginPath();
+            ctx.arc(0, 0, p.radius, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(${r},${g},${b},${currentAlpha})`;
+            
+            // Glow effect for large bright stars (Faros) like in the image
+            if (p.radius > 1.5 && currentAlpha > 0.85 && r === 255) {
+              ctx.shadowBlur = p.radius * 3;
+              ctx.shadowColor = `rgba(${r},${g},${b},${currentAlpha})`;
+            }
+            
+            ctx.fill();
+            ctx.shadowBlur = 0; // reset
+          }
         }
         
         ctx.restore();
