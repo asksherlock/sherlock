@@ -6,7 +6,6 @@ import Features from './components/Features';
 import HowItWorks from './components/HowItWorks';
 import Comparison from './components/Comparison';
 import FAQ from './components/FAQ';
-import Testimonials from './components/Testimonials';
 import CTA from './components/CTA';
 import Footer from './components/Footer';
 import FloatingRobot from './components/FloatingRobot';
@@ -35,7 +34,6 @@ export default function LandingPage() {
           <HowItWorks />
           <Comparison />
           <Clients />
-          <Testimonials />
           <CTA />
           <FAQ />
           <Footer />

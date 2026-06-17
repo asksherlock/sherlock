@@ -1,195 +1,120 @@
 import { motion } from 'framer-motion';
-import { IconDNA, IconFlow, IconPulse, IconBrain, AnimatedIconWrapper } from './AnimatedIcons';
 
 const STEPS = [
   {
     number: '01',
-    Icon: IconDNA,
-    title: 'Define tu Producto y Objetivo',
-    desc: 'Comparte el contexto de tu producto: URL, capturas o una descripción. Define el flujo a analizar y el segmento de usuarios.',
-    color: '#6366f1',
-    details: ['Onboarding de usuarios', 'Flujo de compra / checkout', 'Retención y re-engagement', 'Soporte y autoservicio'],
-    time: '5 min',
+    title: 'Define tu audiencia objetivo',
+    desc: 'Describe a tu usuario ideal: edad, contexto, comportamientos, frustraciones. La IA construye arquetipos psicológicamente coherentes.',
   },
   {
     number: '02',
-    Icon: IconDNA,
-    title: 'Sherlock Genera los Perfiles Sintéticos',
-    desc: 'La IA crea perfiles hiperrealistas con demografía, comportamientos y emociones basadas en datos de tu industria.',
-    color: '#8b5cf6',
-    details: ['Demografía y psicografía detallada', 'Tolerancia a la frustración', 'Motivaciones y objetivos', 'Patrones de comportamiento digital'],
-    time: '2 min',
+    title: 'Genera usuarios sintéticos',
+    desc: 'Sherlock crea decenas de perfiles únicos con personalidades, historias y motivaciones distintas que reflejan tu mercado real.',
   },
   {
     number: '03',
-    Icon: IconFlow,
-    title: 'Simulación Automatizada de Flujos',
-    desc: 'Los usuarios sintéticos navegan tu producto de forma autónoma, tomando decisiones reales y registrando cada interacción.',
-    color: '#22d3ee',
-    details: ['Miles de sesiones paralelas', 'Comportamiento no-lineal', 'Generación de casos borde', 'Logs detallados de interacción'],
-    time: '15 min',
+    title: 'Simula entrevistas y pruebas',
+    desc: 'Hazles preguntas, presenta productos, valida ideas. Cada usuario responde desde su perspectiva única con total consistencia.',
   },
   {
     number: '04',
-    Icon: IconBrain,
-    title: 'Insights Accionables al Instante',
-    desc: 'Recibe un reporte con fricciones priorizadas, causa raíz documentada y recomendaciones concretas listas para tu equipo.',
-    color: '#10b981',
-    details: ['Mapa de calor de fricciones', 'Causa raíz automática', 'Priorización por impacto', 'Recomendaciones UX/UI'],
-    time: 'Inmediato',
+    title: 'Obtén insights accionables',
+    desc: 'Recibe análisis automáticos, patrones de comportamiento y recomendaciones concretas para tu producto o estrategia.',
   },
 ];
 
 export default function HowItWorks() {
   return (
-    <section id="how-it-works" style={{ padding: '120px 24px', position: 'relative', background: 'linear-gradient(180deg, transparent 0%, rgba(99,102,241,0.025) 50%, transparent 100%)' }}>
-      <div style={{ maxWidth: 1200, margin: '0 auto' }}>
-        {/* Header */}
-        <motion.div initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }}
-          style={{ textAlign: 'center', marginBottom: 90 }}
-        >
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '5px 14px', borderRadius: 100, background: 'rgba(34,211,238,0.08)', border: '1px solid rgba(34,211,238,0.2)', marginBottom: 20 }}>
-            <span style={{ fontSize: '11px', color: '#67e8f9', fontWeight: 600, letterSpacing: '0.08em' }}>CÓMO FUNCIONA</span>
-          </div>
-          <h2 style={{ fontSize: 'clamp(30px, 4vw, 52px)', fontWeight: 800, fontFamily: 'Space Grotesk, sans-serif', letterSpacing: '-0.02em', lineHeight: 1.15, marginBottom: 16, background: 'linear-gradient(135deg, #f8fafc, #94a3b8)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
-            De la pregunta al insight<br />en minutos, no meses
+    <section id="how-it-works" style={{ padding: '60px 24px', position: 'relative', overflow: 'hidden' }}>
+      
+      <div style={{ maxWidth: 1300, margin: '0 auto' }}>
+        
+        {/* Full-width Header at the Top */}
+        <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }} style={{ marginBottom: 60 }}>
+          <h2 style={{ fontSize: 'clamp(40px, 5vw, 64px)', fontWeight: 800, fontFamily: '"Syne", sans-serif', letterSpacing: '-0.02em', lineHeight: 1.1, marginBottom: 24, color: '#ffffff' }}>
+            ¿Cómo <span style={{ background: 'linear-gradient(90deg, #8b5cf6, #06b6d4)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>funciona?</span>
           </h2>
-          <p style={{ fontSize: '18px', color: '#475569', maxWidth: 520, margin: '0 auto', lineHeight: 1.7 }}>
-            Olvídate de meses de investigación cualitativa. Con Sherlock AI obtienes respuestas profundas en horas.
+          <p style={{ fontSize: '18px', color: '#94a3b8', lineHeight: 1.6, fontWeight: 300 }}>
+            En cuatro pasos pasas de una hipótesis a insights accionables — sin reclutamiento, sin bias, sin esperas.
           </p>
         </motion.div>
 
-        {/* Timeline */}
-        <div style={{ position: 'relative' }}>
-          {/* Vertical line */}
-          <div style={{
-            position: 'absolute',
-            left: '50%',
-            top: 0, bottom: 0,
-            width: 1,
-            background: 'linear-gradient(180deg, transparent, rgba(99,102,241,0.3) 10%, rgba(99,102,241,0.3) 90%, transparent)',
-            transform: 'translateX(-50%)',
-          }} />
+        {/* Main Grid Layout */}
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: '1fr 1fr',
+          gap: 80,
+          alignItems: 'start',
+        }} className="how-it-works-grid">
 
-          {STEPS.map((step, i) => (
-            <motion.div key={i}
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-60px' }}
-              transition={{ duration: 0.7, delay: i * 0.1 }}
-              className="timeline-row"
-              style={{
-                display: 'grid',
-                gridTemplateColumns: '1fr 60px 1fr',
-                gap: 16,
-                alignItems: 'start',
-                marginBottom: 40,
-                direction: i % 2 === 0 ? 'ltr' : 'rtl',
-              }}
-            >
-              {/* Content card */}
-              <motion.div
-                whileHover={{ scale: 1.02 }}
-                transition={{ type: 'spring', stiffness: 250 }}
+          {/* Left Column: Steps List */}
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
+            {STEPS.map((step, i) => (
+              <motion.div 
+                key={i}
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: i * 0.1 }}
                 style={{
-                  padding: '20px',
-                  direction: 'ltr',
-                  position: 'relative',
+                  display: 'flex',
+                  gap: 24,
+                  paddingBottom: 32,
+                  paddingTop: i === 0 ? 0 : 32,
+                  borderBottom: i < STEPS.length - 1 ? '1px solid rgba(255,255,255,0.05)' : 'none',
                 }}
               >
-                {/* Top accent */}
-                <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 2, background: `linear-gradient(90deg, ${step.color}, transparent)`, opacity: 0.7 }} />
-
-                <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
-                  <AnimatedIconWrapper color={step.color} size={44}>
-                    <step.Icon size={24} color={step.color} />
-                  </AnimatedIconWrapper>
-                  <div>
-                    <div style={{ fontSize: '10px', fontWeight: 800, color: step.color, letterSpacing: '0.1em' }}>PASO {step.number}</div>
-                    <div style={{ fontSize: '11px', color: '#475569', marginTop: 1 }}>⏱ {step.time}</div>
-                  </div>
+                <div style={{ fontSize: '16px', fontWeight: 700, color: '#6366f1', fontFamily: '"Syne", sans-serif', paddingTop: 2 }}>
+                  {step.number}
                 </div>
-
-                <h3 style={{ fontSize: '18px', fontWeight: 700, fontFamily: 'Space Grotesk, sans-serif', color: '#f1f5f9', marginBottom: 10, lineHeight: 1.3 }}>
-                  {step.title}
-                </h3>
-                <p style={{ fontSize: '14px', color: '#64748b', lineHeight: 1.7, marginBottom: 18 }}>
-                  {step.desc}
-                </p>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-                  {step.details.map((d, j) => (
-                    <div key={j} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                      <div style={{ width: 5, height: 5, borderRadius: '50%', background: step.color, boxShadow: `0 0 5px ${step.color}`, flexShrink: 0 }} />
-                      <span style={{ fontSize: '13px', color: '#475569' }}>{d}</span>
-                    </div>
-                  ))}
+                <div>
+                  <h3 style={{ fontSize: '20px', fontWeight: 600, color: '#f8fafc', marginBottom: 12, fontFamily: '"Cabinet Grotesk", sans-serif', letterSpacing: '0.02em' }}>
+                    {step.title}
+                  </h3>
+                  <p style={{ fontSize: '15px', color: '#64748b', lineHeight: 1.6, fontWeight: 300 }}>
+                    {step.desc}
+                  </p>
                 </div>
               </motion.div>
+            ))}
+          </div>
 
-              {/* Center node */}
-              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', direction: 'ltr', paddingTop: 16 }}>
-                <motion.div
-                  initial={{ scale: 0 }} whileInView={{ scale: 1 }}
-                  viewport={{ once: true }} transition={{ type: 'spring', delay: i * 0.1 + 0.3 }}
-                  style={{
-                    width: 40, height: 40,
-                    borderRadius: '50%',
-                    background: `radial-gradient(circle, ${step.color}30, ${step.color}10)`,
-                    border: `2px solid ${step.color}`,
-                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    fontSize: '14px', fontWeight: 900,
-                    color: step.color,
-                    fontFamily: 'Space Grotesk, sans-serif',
-                    boxShadow: `0 0 20px ${step.color}30`,
-                    zIndex: 1,
-                    position: 'relative',
-                  }}
-                >
-                  {step.number}
-                  {/* Pulse ring */}
-                  <div style={{
-                    position: 'absolute', inset: -6,
-                    borderRadius: '50%',
-                    border: `1px solid ${step.color}30`,
-                    animation: 'step-pulse 2s ease-out infinite',
-                  }} />
-                </motion.div>
-
-                {i < STEPS.length - 1 && (
-                  <div style={{ width: 1, flex: 1, minHeight: 30, background: `linear-gradient(180deg, ${step.color}50, transparent)`, marginTop: 4 }} />
-                )}
-              </div>
-
-              {/* Empty right/left side */}
-              <div />
+          {/* Right Column: Vimeo Video Embed */}
+          <div style={{ position: 'relative', paddingTop: 10 }}>
+            {/* Video Container */}
+            <motion.div
+              initial={{ opacity: 0, y: 40, rotateX: 5 }}
+              whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, type: 'spring', bounce: 0.4 }}
+              style={{
+                position: 'relative',
+                zIndex: 10,
+                background: 'rgba(15, 17, 26, 0.8)',
+                borderRadius: 24,
+                border: '1px solid rgba(255,255,255,0.06)',
+                overflow: 'hidden',
+                boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)',
+                aspectRatio: '16/9',
+                width: '100%'
+              }}
+            >
+              <iframe 
+                src="https://player.vimeo.com/video/1099426864?badge=0&autopause=0&player_id=0&app_id=58479" 
+                frameBorder="0" 
+                allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media" 
+                style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}
+                title="Sherlock AI"
+              ></iframe>
             </motion.div>
-          ))}
+          </div>
         </div>
 
-        {/* Bottom CTA */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }} transition={{ duration: 0.6 }}
-          style={{ textAlign: 'center', marginTop: 20 }}
-        >
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 10, padding: '14px 28px', borderRadius: 14, background: 'rgba(99,102,241,0.08)', border: '1px solid rgba(99,102,241,0.2)' }}>
-            <span style={{ fontSize: '20px' }}>⚡</span>
-            <span style={{ fontSize: '15px', color: '#94a3b8' }}>
-              Tiempo total desde setup hasta primer insight: <strong style={{ color: '#6366f1' }}>menos de 30 minutos</strong>
-            </span>
-          </div>
-        </motion.div>
       </div>
 
       <style>{`
-        @keyframes step-pulse {
-          0% { transform: scale(1); opacity: 0.6; }
-          100% { transform: scale(2); opacity: 0; }
-        }
-        @media(max-width:768px){
-          .timeline-row { grid-template-columns: 1fr !important; direction: ltr !important; }
-          .timeline-row > *:nth-child(2) { display: none; }
-          .timeline-row > *:nth-child(3) { display: none; }
+        @media(max-width:1024px){
+          .how-it-works-grid { grid-template-columns: 1fr !important; gap: 60px !important; }
         }
       `}</style>
     </section>

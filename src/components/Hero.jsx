@@ -61,13 +61,34 @@ export default function Hero() {
           initial={{ opacity: 0, scale: 0.95, filter: 'blur(10px)' }}
           animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
           transition={{ duration: 1.9, delay: 2.1, ease: 'easeInOut' }}
-          style={{ fontSize: 'clamp(48px, 8vw, 88px)', fontWeight: 800, lineHeight: 1.05, letterSpacing: '-0.04em', marginBottom: 40, color: '#ffffff', maxWidth: 1000 }}
+          style={{ 
+            fontSize: 'clamp(56px, 8vw, 96px)', 
+            lineHeight: 1.25, 
+            letterSpacing: '-0.02em', 
+            marginBottom: 0, 
+            color: '#ffffff', 
+            maxWidth: 1000,
+            fontFamily: '"Outfit", sans-serif'
+          }}
         >
-          Tu cliente ideal en minutos
+          <span style={{ fontWeight: 600, display: 'block' }}>Tu Cliente Ideal</span>
+          <span style={{ fontWeight: 300, display: 'block', color: '#E9D5FF' }}>En Minutos</span>
         </motion.h1>
-        {/* 4. Subtitle */}
-        <motion.p {...revealEffect(4.0)} style={{ fontSize: 'clamp(18px, 2vw, 24px)', lineHeight: 1.5, color: '#a1a1aa', maxWidth: 800, fontWeight: 400, letterSpacing: '-0.01em', marginTop: 100 }}>
-          Insights reales. Usuarios sintéticos. En minutos, no semanas.
+        {/* 4. Subtitle at the bottom */}
+        <motion.p {...revealEffect(4.0)} style={{ 
+          position: 'absolute',
+          bottom: 120,
+          left: 0,
+          right: 0,
+          margin: '0 auto',
+          fontSize: 'clamp(18px, 2vw, 24px)', 
+          lineHeight: 1.5, 
+          color: '#a1a1aa', 
+          maxWidth: 800, 
+          fontWeight: 400, 
+          letterSpacing: '-0.01em' 
+        }}>
+          Insights reales con Usuarios sintéticos. En minutos, no semanas
         </motion.p>
       </div>
 
