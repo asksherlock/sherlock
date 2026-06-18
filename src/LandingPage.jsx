@@ -2,10 +2,13 @@ import { motion } from 'framer-motion';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import Clients from './components/Clients';
+import AboutSherlock from './components/AboutSherlock';
 import Features from './components/Features';
 import HowItWorks from './components/HowItWorks';
 import Comparison from './components/Comparison';
 import FAQ from './components/FAQ';
+import Testimonials from './components/Testimonials';
+import Pricing from './components/Pricing';
 import CTA from './components/CTA';
 import Footer from './components/Footer';
 import FloatingRobot from './components/FloatingRobot';
@@ -26,16 +29,32 @@ export default function LandingPage() {
         {/* Re-enable pointer events for interactive elements */}
         <div style={{ pointerEvents: 'auto' }}>
           
-          {/* 5. Top Tab Navbar appears later */}
           <Navbar />
           
           <Hero />
-          <Features />
-          <HowItWorks />
-          <Comparison />
+          
+          {/* Social Proof Logobar */}
           <Clients />
+          
+          {/* El Manifiesto (Who we are) */}
+          <AboutSherlock />
+          
+          {/* Cómo funciona */}
+          <HowItWorks />
+          
+          {/* Capacidades (Redesigned) */}
+          <Features />
+          
+          <Comparison />
+          
+          <Testimonials />
+          
+          <Pricing />
+          
           <CTA />
+          
           <FAQ />
+          
           <Footer />
         </div>
       </div>

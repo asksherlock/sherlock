@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { GoogleGenAI } from '@google/genai';
 
 export default function FloatingRobot() {
   const [showChat, setShowChat] = useState(false);
@@ -58,6 +57,14 @@ export default function FloatingRobot() {
     return () => cancelAnimationFrame(animRef.current);
   }, [showChat]);
 
+  const PREDEFINED_RESPONSES = [
+    "Con Sherlock, puedes validar prototipos con usuarios sintéticos en cuestión de minutos. ¿En qué flujo de producto estás trabajando?",
+    "¡Interesante! Los usuarios sintéticos no tienen sesgos humanos de complacencia y te darán feedback accionable sobre tus diseños al instante.",
+    "Nuestros modelos de lenguaje crean arquetipos hiperrealistas. Puedes segmentar por edad, industria, rol y hasta tolerancia a la frustración UX.",
+    "Te recomiendo probar nuestro simulador de flujos para encontrar exactamente en qué paso abandonan los usuarios y por qué.",
+    "¡Exacto! Esa es la magia de la investigación a velocidad de código. Obtienes insights profundos sin semanas de reclutamiento ni agendas complejas."
+  ];
+
   const handleSend = async (e) => {
     e.preventDefault();
     if (!inputValue.trim() || isTyping) return;
@@ -67,46 +74,13 @@ export default function FloatingRobot() {
     setInputValue('');
     setIsTyping(true);
     
-    if (!import.meta.env.VITE_GEMINI_API_KEY || import.meta.env.VITE_GEMINI_API_KEY === 'Pega_aqui_tu_clave_de_API') {
-      setMessages(prev => [...prev, { 
-        text: '¡Atención! No has configurado tu VITE_GEMINI_API_KEY en el archivo .env. Por favor, añádela y reinicia el servidor para poder platicar contigo.',
-        isBot: true 
-      }]);
+    // Simulate AI thinking delay (1.5 to 3 seconds)
+    const delay = Math.floor(Math.random() * 1500) + 1500;
+    setTimeout(() => {
+      const randomResponse = PREDEFINED_RESPONSES[Math.floor(Math.random() * PREDEFINED_RESPONSES.length)];
+      setMessages(prev => [...prev, { text: randomResponse, isBot: true }]);
       setIsTyping(false);
-      return;
-    }
-
-    try {
-      const ai = new GoogleGenAI({ apiKey: import.meta.env.VITE_GEMINI_API_KEY });
-      const systemPrompt = "Eres Sherlock, el asistente virtual inteligente de Ask-Sherlock. Tu objetivo es ayudar a los usuarios a entender cómo nuestra plataforma genera 'Usuarios Sintéticos' interactivos usando IA para simular perfiles reales, permitiendo descubrir fricciones en productos en minutos en lugar de semanas. Eres profesional, astuto y amable. REGLA ESTRICTA: Tus respuestas deben ser EXTREMADAMENTE CONCISAS. Usa siempre saltos de línea, párrafos muy cortos y viñetas (bullet points) para estructurar la información y hacerla fácil de leer.";
-      
-      const response = await ai.models.generateContent({
-        model: 'gemini-2.5-flash',
-        contents: [
-          ...messages.filter(m => m.text).map(m => ({
-            role: m.isBot ? 'model' : 'user',
-            parts: [{ text: m.text }]
-          })),
-          { role: 'user', parts: [{ text: userText }] }
-        ],
-        config: {
-          systemInstruction: systemPrompt,
-        }
-      });
-
-      setMessages(prev => [...prev, { 
-        text: response.text,
-        isBot: true 
-      }]);
-    } catch (error) {
-      console.error("Gemini API Error:", error);
-      setMessages(prev => [...prev, { 
-        text: 'Ups, mis circuitos neuronales tuvieron un fallo al intentar conectarme. Revisa la consola para más detalles.',
-        isBot: true 
-      }]);
-    } finally {
-      setIsTyping(false);
-    }
+    }, delay);
   };
 
   return (

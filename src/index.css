@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&display=swap');
+
 * {
   margin: 0;
   padding: 0;
@@ -28,7 +30,7 @@ html {
 }
 
 body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
   background: var(--bg-primary);
   color: var(--text-primary);
   overflow-x: hidden;
@@ -50,4 +52,15 @@ body {
 
 .font-space {
   font-family: 'Space Grotesk', sans-serif;
+}
+
+/* --- Global Overrides --- */
+/* Unify typography everywhere except the Hero section */
+section:not(#hero) * {
+  font-family: 'DM Sans', sans-serif !important;
+}
+
+/* Justify all paragraphs outside the Hero section for an organized editorial look */
+section:not(#hero) p {
+  text-align: justify !important;
 }

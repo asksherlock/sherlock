@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { GoogleGenAI } from '@google/genai';
 
 const BASE_PROFILES = [
   { name: 'Ejecutivo Financiero', age: 45, persona: 'Ejecutivo frustrado con la pasarela de pagos', color: '#6366f1' },
@@ -71,33 +70,37 @@ export default function SyntheticSimulator() {
     setActiveScript([]);
     setIsGenerating(true);
 
-    try {
-      const ai = new GoogleGenAI({ apiKey: import.meta.env.VITE_GEMINI_API_KEY });
-      const prompt = `Eres un simulador de entrevistas de UX. Genera la transcripción de una entrevista entre un "Investigador UX" (role: "user") y un "Usuario Sintético" (role: "model") con este perfil: Nombre: ${newProf.name}, Edad: ${newProf.age}, Situación: "${newProf.persona}".
-La entrevista debe ser profunda y detallada, de exactamente 6 a 8 mensajes alternados (empezando por el investigador).
-El investigador indaga sobre un problema. El usuario responde de manera muy realista, frustrada o constructiva según su perfil, en español de México.
-Responde ÚNICAMENTE con un JSON Array válido. Ejemplo: [{"role": "user", "text": "Hola, ¿qué tal?"}, {"role": "model", "text": "Bien."}]`;
+    const MOCK_SCRIPTS = [
+      [
+        { role: 'user', text: 'Hola. Notamos que pasaste mucho tiempo en el paso de pago. ¿Tuviste algún problema?' },
+        { role: 'model', text: 'Sí, no estaba claro dónde ingresar el código de descuento. Me frustró bastante.' },
+        { role: 'user', text: 'Entiendo. ¿Qué esperabas ver en esa pantalla?' },
+        { role: 'model', text: 'Un campo claramente visible antes de poner mi tarjeta de crédito, no después.' }
+      ],
+      [
+        { role: 'user', text: 'Gracias por probar el nuevo dashboard. ¿Qué te pareció la navegación?' },
+        { role: 'model', text: 'Un poco confusa. Los filtros principales están escondidos en un menú secundario.' },
+        { role: 'user', text: 'Interesante. ¿Dónde preferirías que estuvieran?' },
+        { role: 'model', text: 'Directamente arriba de la tabla de datos, siempre visibles.' }
+      ],
+      [
+        { role: 'user', text: 'Notamos que abandonaste el flujo de registro. ¿Podrías contarnos el motivo?' },
+        { role: 'model', text: 'Me pidieron el número de teléfono como obligatorio. No me gusta compartir ese dato.' },
+        { role: 'user', text: 'Comprendo. ¿Si fuera opcional, habrías terminado el registro?' },
+        { role: 'model', text: 'Definitivamente. Todo lo demás parecía muy directo.' }
+      ],
+      [
+        { role: 'user', text: 'Hola, veo que intentaste conectar tu cuenta de banco pero cancelaste.' },
+        { role: 'model', text: 'Sí, no sentí mucha confianza. El diseño se veía raro en esa pantalla.' },
+        { role: 'user', text: '¿Había algún elemento en particular que generó esa desconfianza?' },
+        { role: 'model', text: 'Faltaban los logos de seguridad SSL y el texto legal estaba en inglés.' }
+      ]
+    ];
 
-      const response = await ai.models.generateContent({
-        model: 'gemini-2.5-flash',
-        contents: [{ role: 'user', parts: [{ text: prompt }] }],
-        config: {
-          temperature: 0.8,
-          responseMimeType: "application/json",
-        }
-      });
-
-      const scriptData = JSON.parse(response.text);
-      setActiveScript(scriptData);
-    } catch (error) {
-      console.error("Error generating script:", error);
-      setActiveScript([
-        { role: 'user', text: 'Hola, notamos un problema en tu sesión.' },
-        { role: 'model', text: 'Sí, la plataforma está fallando. Necesito ayuda rápida.' }
-      ]);
-    } finally {
+    setTimeout(() => {
+      setActiveScript(randomFrom(MOCK_SCRIPTS));
       setIsGenerating(false);
-    }
+    }, 1500); // Simulate network latency
   };
 
   useEffect(() => {
@@ -187,7 +190,7 @@ Responde ÚNICAMENTE con un JSON Array válido. Ejemplo: [{"role": "user", "text
       <div ref={scrollRef} style={{ height: 400, overflowY: 'auto', padding: '20px', display: 'flex', flexDirection: 'column', gap: 16 }}>
         {isGenerating && (
           <div style={{ textAlign: 'center', color: '#a5b4fc', fontSize: '13px', fontStyle: 'italic', padding: '20px' }}>
-            Gemini está generando una entrevista aleatoria en tiempo real...
+            Generando conexión con usuario sintético...
           </div>
         )}
         <AnimatePresence>
@@ -197,35 +200,46 @@ Responde ÚNICAMENTE con un JSON Array válido. Ejemplo: [{"role": "user", "text
               <motion.div key={msg.id} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
                 style={{ 
                   display: 'flex', 
-                  flexDirection: isBot ? 'row' : 'row-reverse', // Right align for user, Left align for bot
-                  gap: 12,
-                  alignItems: 'flex-end',
+                  flexDirection: 'column',
+                  alignItems: isBot ? 'flex-start' : 'flex-end',
                   alignSelf: isBot ? 'flex-start' : 'flex-end',
                   maxWidth: '85%'
                 }}
               >
-                {/* Avatar */}
-                <div style={{ 
-                  width: 32, height: 32, borderRadius: '50%', flexShrink: 0,
-                  display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '16px',
-                  background: isBot ? `linear-gradient(135deg, ${profile.color}30, rgba(0,0,0,0.5))` : 'linear-gradient(135deg, rgba(99,102,241,0.5), rgba(139,92,246,0.5))',
-                  border: `1px solid ${isBot ? profile.color + '50' : 'rgba(99,102,241,0.8)'}`
-                }}>
-                  {isBot ? <RobotAvatar size={18} color={profile.color} /> : <UserAvatar size={18} color="#c7d2fe" />}
+                {/* Name Label */}
+                <div style={{ fontSize: '11px', color: '#818cf8', marginBottom: 6, fontWeight: 600, paddingLeft: isBot ? 44 : 0, paddingRight: isBot ? 0 : 44 }}>
+                  {isBot ? `${profile.name} (Usuario Sintético)` : 'Tú (Investigador UX)'}
                 </div>
 
-                {/* Chat Bubble */}
-                <div style={{
-                  background: isBot ? 'rgba(255,255,255,0.05)' : 'rgba(99,102,241,0.2)',
-                  border: `1px solid ${isBot ? 'rgba(255,255,255,0.1)' : 'rgba(99,102,241,0.4)'}`,
-                  padding: '12px 16px',
-                  borderRadius: isBot ? '16px 16px 16px 4px' : '16px 16px 4px 16px',
-                  color: '#f8fafc',
-                  fontSize: '13.5px',
-                  lineHeight: 1.5,
-                  whiteSpace: 'pre-wrap'
+                <div style={{ 
+                  display: 'flex', 
+                  flexDirection: isBot ? 'row' : 'row-reverse',
+                  gap: 12,
+                  alignItems: 'flex-end',
                 }}>
-                  {msg.text}
+                  {/* Avatar */}
+                  <div style={{ 
+                    width: 32, height: 32, borderRadius: '50%', flexShrink: 0,
+                    display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '16px',
+                    background: isBot ? `linear-gradient(135deg, ${profile.color}30, rgba(0,0,0,0.5))` : 'linear-gradient(135deg, rgba(99,102,241,0.5), rgba(139,92,246,0.5))',
+                    border: `1px solid ${isBot ? profile.color + '50' : 'rgba(99,102,241,0.8)'}`
+                  }}>
+                    {isBot ? <RobotAvatar size={18} color={profile.color} /> : <UserAvatar size={18} color="#c7d2fe" />}
+                  </div>
+
+                  {/* Chat Bubble */}
+                  <div style={{
+                    background: isBot ? 'rgba(255,255,255,0.05)' : 'rgba(99,102,241,0.2)',
+                    border: `1px solid ${isBot ? 'rgba(255,255,255,0.1)' : 'rgba(99,102,241,0.4)'}`,
+                    padding: '12px 16px',
+                    borderRadius: isBot ? '16px 16px 16px 4px' : '16px 16px 4px 16px',
+                    color: '#f8fafc',
+                    fontSize: '13.5px',
+                    lineHeight: 1.5,
+                    whiteSpace: 'pre-wrap'
+                  }}>
+                    {msg.text}
+                  </div>
                 </div>
               </motion.div>
             );

@@ -60,6 +60,9 @@ export default function StarfieldBackground() {
     
     // Click for Shockwave
     const onClick = (e) => {
+      // Disable shockwave if the user has scrolled past the hero section
+      if (window.scrollY > window.innerHeight * 0.8) return;
+      
       ripplesRef.current.push({
         x: e.clientX,
         y: e.clientY,

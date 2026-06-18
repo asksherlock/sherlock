@@ -400,6 +400,9 @@ export default function ParticleCanvas() {
     
     // Click for Shockwave
     const onClick = (e) => {
+      // Desactivar el efecto de onda expansiva si ya se deslizó hacia abajo
+      if (window.scrollY > window.innerHeight * 0.8) return;
+
       ripplesRef.current.push({
         x: e.clientX,
         y: e.clientY,
