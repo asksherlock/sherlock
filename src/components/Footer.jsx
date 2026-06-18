@@ -48,27 +48,23 @@ export default function Footer() {
               {
                 title: 'PLATAFORMA',
                 links: [
-                  { label: 'Características', href: '#' },
-                  { label: 'Cómo funciona', href: '#' },
-                  { label: 'Casos de uso', href: '#' },
-                  { label: 'Integraciones', href: '#' }
+                  { label: 'Características', href: '#platform' },
+                  { label: 'Cómo funciona', href: '#how-it-works' },
+                  { label: 'Casos de uso', href: '#use-cases' },
+                  { label: 'Planes', href: '#pricing' }
                 ]
               },
               {
                 title: 'EMPRESA',
                 links: [
-                  { label: 'Sobre nosotros', href: '#' },
-                  { label: 'Blog', href: '#' },
-                  { label: 'Clientes', href: '#' },
-                  { label: 'Contacto', href: '#' }
+                  { label: 'Sobre nosotros', href: '#about' },
+                  { label: 'Contacto', href: '#contact' }
                 ]
               },
               {
                 title: 'LEGAL',
                 links: [
-                  { label: 'Aviso de Privacidad', to: '/aviso-de-privacidad' },
-                  { label: 'Términos', href: '#' },
-                  { label: 'Cookies', href: '#' }
+                  { label: 'Aviso de Privacidad', to: '/aviso-de-privacidad' }
                 ]
               }
             ].map((col, idx) => (

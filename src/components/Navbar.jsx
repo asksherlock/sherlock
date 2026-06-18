@@ -5,7 +5,7 @@ import SherlockLogo from './SherlockLogo';
 const NAV_LINKS = [
   { label: 'Plataforma', href: '#platform' },
   { label: 'Cómo funciona', href: '#how-it-works' },
-  { label: 'Casos de uso', href: '#use-cases' },
+  { label: 'Planes', href: '#pricing' },
   { label: 'Clientes', href: '#clients' },
 ];
 
@@ -54,7 +54,7 @@ export default function Navbar() {
         </div>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-          <a href="#contact" style={{
+          <a href="https://calendly.com/innogyzer/workshop?month=2026-06" target="_blank" rel="noopener noreferrer" style={{
             padding: '10px 22px', borderRadius: 10,
             background: 'linear-gradient(135deg, #6366f1, #8b5cf6)',
             color: '#fff', fontSize: '14px', fontWeight: 600, textDecoration: 'none',
@@ -64,7 +64,7 @@ export default function Navbar() {
             onMouseEnter={e => { e.target.style.transform = 'translateY(-1px)'; e.target.style.boxShadow = '0 0 30px rgba(99,102,241,0.5)'; }}
             onMouseLeave={e => { e.target.style.transform = 'translateY(0)'; e.target.style.boxShadow = '0 0 20px rgba(99,102,241,0.3)'; }}
           >
-            Solicitar Demo
+            Agendar Cita
           </a>
         </div>
       </div>

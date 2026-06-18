@@ -114,7 +114,7 @@ export default function Hero() {
                 Motor Sintético Interactivo
               </h2>
               <p style={{ fontSize: '18px', color: '#a1a1aa', lineHeight: 1.6 }}>
-                Genera perfiles de usuario basados en datos reales y observa cómo interactúan con tu producto. Inicia una simulación ahora mismo para ver un adelanto de Ask-Sherlock en acción.
+                Genera perfiles de usuarios con variables demográficas, socioeconómicas y psicográficas y observa cómo interactúan con tu producto. Inicia una simulación con un usuario aleatorio para visualizar como funciona Ask-Sherlock.
               </p>
             </div>
 
@@ -128,7 +128,7 @@ export default function Hero() {
             }}>
               {[
                 { value: '10x', label: 'Más rápido que investigación tradicional' },
-                { value: '15+', label: 'Empresas Fortune 500 confían en nosotros' },
+                { value: '15+', label: 'Empresas competitivas confían en nosotros' },
                 { value: '98%', label: 'Precisión en detección de fricciones' },
               ].map(stat => (
                 <div key={stat.value} style={{ textAlign: 'left' }}>

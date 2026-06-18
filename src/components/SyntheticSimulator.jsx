@@ -1,12 +1,57 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
+const ShuffleIcon = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: 6 }}>
+    <polyline points="16 3 21 3 21 8"></polyline>
+    <line x1="4" y1="20" x2="21" y2="3"></line>
+    <polyline points="21 16 21 21 16 21"></polyline>
+    <line x1="15" y1="15" x2="21" y2="21"></line>
+    <line x1="4" y1="4" x2="9" y2="9"></line>
+  </svg>
+);
+
 const BASE_PROFILES = [
-  { name: 'Ejecutivo Financiero', age: 45, persona: 'Ejecutivo frustrado con la pasarela de pagos', color: '#6366f1' },
-  { name: 'Millennial Compradora', age: 28, persona: 'Usuaria explorando app móvil por primera vez', color: '#ec4899' },
-  { name: 'Director de TI', age: 52, persona: 'Evaluando dashboard de métricas empresarial', color: '#22d3ee' },
-  { name: 'Estudiante', age: 21, persona: 'Buscando información rápida sin registrarse', color: '#10b981' },
-  { name: 'Abuelo Tech', age: 68, persona: 'Intentando pagar servicio básico en línea', color: '#f59e0b' },
+  { name: 'Ejecutivo Financiero', age: 45, persona: 'Ejecutivo evaluando software de gestión de pagos B2B', color: '#6366f1',
+    script: [
+      { role: 'user', text: 'Para empezar, ¿podrías contarme a qué te dedicas actualmente y cómo es un día normal en tu vida profesional?' },
+      { role: 'model', text: 'Claro, soy Director Financiero en una empresa de logística. Mi día consiste en revisar flujos de caja, autorizar pagos y analizar métricas. Es bastante exigente.' },
+      { role: 'user', text: 'Entiendo. ¿Cuáles son los mayores retos que enfrentas al gestionar esos pagos y flujos de caja diariamente?' },
+      { role: 'model', text: 'La falta de visibilidad en tiempo real. A veces tardamos días en conciliar transferencias internacionales, lo que retrasa todas nuestras operaciones.' }
+    ]
+  },
+  { name: 'Millennial Compradora', age: 28, persona: 'Usuaria frecuente de e-commerce y apps de estilo de vida', color: '#ec4899',
+    script: [
+      { role: 'user', text: 'Hola, me gustaría saber un poco sobre ti. ¿Cómo describirías tu relación con las compras por internet?' },
+      { role: 'model', text: 'Hola. Pues compro casi todo en línea, desde ropa hasta la despensa. Uso mucho el celular porque siempre estoy en movimiento entre el trabajo y mis clases.' },
+      { role: 'user', text: 'Perfecto. ¿Qué factores son decisivos para ti al elegir una app nueva para hacer tus compras?' },
+      { role: 'model', text: 'Que sea rápida, que tenga un buscador eficiente y, sobre todo, que el costo de envío sea transparente desde el primer click.' }
+    ]
+  },
+  { name: 'Director de TI', age: 52, persona: 'Líder tecnológico buscando integrar múltiples sistemas', color: '#22d3ee',
+    script: [
+      { role: 'user', text: 'Para iniciar, ¿qué herramientas tecnológicas utilizas actualmente para monitorear la infraestructura de tu empresa?' },
+      { role: 'model', text: 'Usamos una combinación de plataformas legacy y cloud, pero ninguna está integrada. Es un dolor de cabeza consolidar todos los reportes.' },
+      { role: 'user', text: '¿Qué impacto tiene esa falta de integración en el trabajo diario de tu equipo técnico?' },
+      { role: 'model', text: 'Perdemos unas 10 horas semanales solo cruzando datos manualmente, tiempo que deberíamos usar para prevenir caídas del sistema.' }
+    ]
+  },
+  { name: 'Estudiante', age: 21, persona: 'Buscando opciones para administrar sus primeros ingresos', color: '#10b981',
+    script: [
+      { role: 'user', text: 'Mirando hacia el futuro, ¿tienes alguna meta importante en mente para los próximos meses?' },
+      { role: 'model', text: 'Sí, quiero irme de intercambio a Canadá el próximo año. Ahorita estoy intentando organizar mis gastos para poder ahorrar, pero me cuesta.' },
+      { role: 'user', text: 'Además de intentar ahorrar, ¿qué herramientas financieras has considerado para manejar tus gastos?' },
+      { role: 'model', text: 'Solo uso la tarjeta de débito de la universidad. Pensé en bajar una app de finanzas, pero me da flojera registrar cada gasto a mano.' }
+    ]
+  },
+  { name: 'Abuelo Tech', age: 68, persona: 'Adaptándose a la banca móvil por necesidad', color: '#f59e0b',
+    script: [
+      { role: 'user', text: 'Cuénteme un poco sobre cómo suele realizar sus pagos de servicios, como la luz o el agua, mes a mes.' },
+      { role: 'model', text: 'Normalmente iba al banco o al Oxxo. Pero mis nietos me instalaron una aplicación en el celular para no tener que salir tanto.' },
+      { role: 'user', text: '¿Y cómo ha sido su experiencia utilizando esa aplicación hasta ahora?' },
+      { role: 'model', text: 'Al principio me dio miedo mandar el dinero a otro lado por error. Las letras son muy chicas, pero ahí voy aprendiendo.' }
+    ]
+  },
 ];
 
 function RobotAvatar({ size = 24, color = '#6366f1' }) {
@@ -70,35 +115,8 @@ export default function SyntheticSimulator() {
     setActiveScript([]);
     setIsGenerating(true);
 
-    const MOCK_SCRIPTS = [
-      [
-        { role: 'user', text: 'Hola. Notamos que pasaste mucho tiempo en el paso de pago. ¿Tuviste algún problema?' },
-        { role: 'model', text: 'Sí, no estaba claro dónde ingresar el código de descuento. Me frustró bastante.' },
-        { role: 'user', text: 'Entiendo. ¿Qué esperabas ver en esa pantalla?' },
-        { role: 'model', text: 'Un campo claramente visible antes de poner mi tarjeta de crédito, no después.' }
-      ],
-      [
-        { role: 'user', text: 'Gracias por probar el nuevo dashboard. ¿Qué te pareció la navegación?' },
-        { role: 'model', text: 'Un poco confusa. Los filtros principales están escondidos en un menú secundario.' },
-        { role: 'user', text: 'Interesante. ¿Dónde preferirías que estuvieran?' },
-        { role: 'model', text: 'Directamente arriba de la tabla de datos, siempre visibles.' }
-      ],
-      [
-        { role: 'user', text: 'Notamos que abandonaste el flujo de registro. ¿Podrías contarnos el motivo?' },
-        { role: 'model', text: 'Me pidieron el número de teléfono como obligatorio. No me gusta compartir ese dato.' },
-        { role: 'user', text: 'Comprendo. ¿Si fuera opcional, habrías terminado el registro?' },
-        { role: 'model', text: 'Definitivamente. Todo lo demás parecía muy directo.' }
-      ],
-      [
-        { role: 'user', text: 'Hola, veo que intentaste conectar tu cuenta de banco pero cancelaste.' },
-        { role: 'model', text: 'Sí, no sentí mucha confianza. El diseño se veía raro en esa pantalla.' },
-        { role: 'user', text: '¿Había algún elemento en particular que generó esa desconfianza?' },
-        { role: 'model', text: 'Faltaban los logos de seguridad SSL y el texto legal estaba en inglés.' }
-      ]
-    ];
-
     setTimeout(() => {
-      setActiveScript(randomFrom(MOCK_SCRIPTS));
+      setActiveScript(newProf.script);
       setIsGenerating(false);
     }, 1500); // Simulate network latency
   };
@@ -167,9 +185,9 @@ export default function SyntheticSimulator() {
         </div>
         <button 
           onClick={generateNewProfile}
-          style={{ background: 'none', border: '1px solid rgba(99,102,241,0.4)', borderRadius: 6, color: '#a5b4fc', fontSize: '11px', cursor: 'pointer', padding: '4px 8px' }}
+          style={{ background: 'none', border: '1px solid rgba(99,102,241,0.4)', borderRadius: 6, color: '#a5b4fc', fontSize: '12px', cursor: 'pointer', padding: '6px 12px', display: 'flex', alignItems: 'center', fontWeight: 600 }}
         >
-          🔄 Random
+          <ShuffleIcon /> Random
         </button>
       </div>
 

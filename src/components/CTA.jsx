@@ -1,6 +1,16 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 
+const CalendarIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ width: '56px', height: '56px', color: '#8b5cf6', filter: 'drop-shadow(0px 0px 16px rgba(139,92,246,0.6))', margin: '0 auto' }}>
+    <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+    <path d="M16 2v4" />
+    <path d="M8 2v4" />
+    <path d="M3 10h18" />
+    <rect x="8" y="14" width="8" height="4" rx="1" fill="currentColor" fillOpacity="0.2" />
+  </svg>
+);
+
 export default function CTA() {
   const [submitted, setSubmitted] = useState(false);
   const [email, setEmail] = useState('');
@@ -10,11 +20,12 @@ export default function CTA() {
   const handleSubmit = (e) => {
     e.preventDefault();
     setSubmitted(true);
+    window.open('https://calendly.com/innogyzer/workshop?month=2026-06', '_blank');
   };
 
   return (
     <section id="contact" style={{
-      padding: '120px 24px',
+      padding: '120px 24px 40px 24px',
       position: 'relative',
       overflow: 'hidden',
     }}>
@@ -45,7 +56,9 @@ export default function CTA() {
           transition={{ duration: 0.7 }}
           style={{ textAlign: 'center', marginBottom: 52 }}
         >
-          <div style={{ fontSize: '48px', marginBottom: 20 }}>🔍</div>
+          <div style={{ marginBottom: 20, display: 'flex', justifyContent: 'center' }}>
+            <CalendarIcon />
+          </div>
           <h2 style={{
             fontSize: 'clamp(32px, 5vw, 60px)',
             fontWeight: 900,
@@ -59,14 +72,14 @@ export default function CTA() {
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
             }}>
-              ¿Listo para conocer a{' '}
+              ¿Listo para revolucionar{' '}
             </span>
             <span style={{
               background: 'linear-gradient(135deg, #6366f1, #8b5cf6, #ec4899)',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
             }}>
-              tus usuarios reales
+              tus entrevistas
             </span>
             <span style={{
               background: 'linear-gradient(135deg, #f8fafc, #cbd5e1)',
@@ -77,7 +90,7 @@ export default function CTA() {
             </span>
           </h2>
           <p style={{ fontSize: '18px', color: '#64748b', lineHeight: 1.7, maxWidth: 520, margin: '0 auto' }}>
-            Solicita tu demo gratuita y te mostraremos en vivo cómo Sherlock AI analiza tu producto específico.
+            Agenda una cita para empezar ahorrar recursos con Sherlock.
           </p>
         </motion.div>
 
@@ -162,11 +175,10 @@ export default function CTA() {
                 </div>
                 <div>
                   <label style={{ fontSize: '12px', color: '#64748b', fontWeight: 600, marginBottom: 6, display: 'block', letterSpacing: '0.04em' }}>
-                    EMPRESA
+                    EMPRESA (OPCIONAL)
                   </label>
                   <input
                     type="text"
-                    required
                     value={company}
                     onChange={e => setCompany(e.target.value)}
                     placeholder="Nombre de tu empresa"
@@ -221,7 +233,7 @@ export default function CTA() {
                 </label>
                 <textarea
                   rows={3}
-                  placeholder="Cuéntanos brevemente sobre tu producto y el flujo o problema que quieres investigar..."
+                  placeholder="Cuentanos sobre tu producto o algo que nos ayude a prepararnos para la reunión"
                   style={{
                     width: '100%',
                     padding: '12px 16px',
@@ -266,7 +278,7 @@ export default function CTA() {
                   e.target.style.boxShadow = '0 0 30px rgba(99,102,241,0.3)';
                 }}
               >
-                Solicitar Demo Gratuita →
+                Agendar una Cita →
               </button>
 
               <p style={{ fontSize: '12px', color: '#334155', textAlign: 'center', lineHeight: 1.6 }}>
@@ -275,32 +287,6 @@ export default function CTA() {
               </p>
             </form>
           )}
-        </motion.div>
-
-        {/* Trust signals */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.4 }}
-          style={{
-            display: 'flex',
-            justifyContent: 'center',
-            gap: 32,
-            marginTop: 32,
-            flexWrap: 'wrap',
-          }}
-        >
-          {[
-            { icon: '🔒', text: 'Datos protegidos' },
-            { icon: '⚡', text: 'Setup en minutos' },
-            { icon: '🎯', text: 'Demo personalizada' },
-          ].map(t => (
-            <div key={t.text} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-              <span style={{ fontSize: '16px' }}>{t.icon}</span>
-              <span style={{ fontSize: '13px', color: '#475569' }}>{t.text}</span>
-            </div>
-          ))}
         </motion.div>
       </div>
     </section>

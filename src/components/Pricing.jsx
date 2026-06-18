@@ -140,9 +140,15 @@ export default function Pricing() {
                 <span style={{ fontSize: '14px', color: '#64748b' }}>{plan.period}</span>
               </div>
 
-              <button 
+              <a 
+                href="https://calendly.com/innogyzer/workshop?month=2026-06"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="pricing-btn"
                 style={{ 
+                  display: 'block',
+                  textAlign: 'center',
+                  textDecoration: 'none',
                   width: '100%', 
                   padding: '12px', 
                   borderRadius: 10, 
@@ -152,13 +158,14 @@ export default function Pricing() {
                   marginBottom: 24,
                   cursor: 'pointer',
                   transition: 'all 0.2s',
+                  boxSizing: 'border-box',
                   '--hover-bg': plan.buttonHover.background || plan.buttonStyle.background,
                   '--hover-border': plan.buttonHover.border || plan.buttonStyle.border,
                   '--hover-filter': plan.buttonHover.filter || 'none',
                 }}
               >
                 {plan.cta}
-              </button>
+              </a>
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: 16, flexGrow: 1 }}>
                 {plan.features.map((feat, fIdx) => (
