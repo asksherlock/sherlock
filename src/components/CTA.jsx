@@ -11,6 +11,15 @@ const CalendarIcon = () => (
   </svg>
 );
 
+const SmileIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ width: '64px', height: '64px', color: '#10b981', filter: 'drop-shadow(0px 0px 16px rgba(16,185,129,0.5))', margin: '0 auto' }}>
+    <circle cx="12" cy="12" r="10"></circle>
+    <path d="M8 14s1.5 2 4 2 4-2 4-2"></path>
+    <line x1="9" y1="9" x2="9.01" y2="9"></line>
+    <line x1="15" y1="9" x2="15.01" y2="9"></line>
+  </svg>
+);
+
 export default function CTA() {
   const [submitted, setSubmitted] = useState(false);
   const [email, setEmail] = useState('');
@@ -115,7 +124,9 @@ export default function CTA() {
               animate={{ opacity: 1, scale: 1 }}
               style={{ textAlign: 'center', padding: '20px 0' }}
             >
-              <div style={{ fontSize: '56px', marginBottom: 20 }}>🎉</div>
+              <div style={{ marginBottom: 24, display: 'flex', justifyContent: 'center' }}>
+                <SmileIcon />
+              </div>
               <h3 style={{
                 fontSize: '28px',
                 fontWeight: 700,
@@ -128,21 +139,6 @@ export default function CTA() {
               <p style={{ fontSize: '16px', color: '#64748b', lineHeight: 1.7 }}>
                 El equipo de Sherlock AI se pondrá en contacto contigo en las próximas 24 horas para agendar tu demo personalizada.
               </p>
-              <div style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: 8,
-                marginTop: 24,
-                padding: '10px 20px',
-                borderRadius: 12,
-                background: 'rgba(16,185,129,0.12)',
-                border: '1px solid rgba(16,185,129,0.3)',
-              }}>
-                <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#10b981', boxShadow: '0 0 8px #10b981' }} />
-                <span style={{ fontSize: '13px', color: '#34d399', fontWeight: 600 }}>
-                  Tiempo de respuesta promedio: menos de 4 horas
-                </span>
-              </div>
             </motion.div>
           ) : (
             <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
