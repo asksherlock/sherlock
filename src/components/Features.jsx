@@ -31,7 +31,7 @@ export default function Features() {
   const [activeTab, setActiveTab] = useState(0);
 
   return (
-    <section id="platform" style={{ padding: '140px 24px', position: 'relative', overflow: 'hidden', minHeight: '800px', background: '#000000' }}>
+    <section id="platform" style={{ padding: '40px 24px', position: 'relative', overflow: 'hidden', background: '#000000', minHeight: '100vh', display: 'flex', alignItems: 'center' }}>
       
       {/* Sistema de partículas que forman formas vectoriales (Fondo) */}
       <ShapeParticleCanvas activeTab={activeTab} />
@@ -43,11 +43,7 @@ export default function Features() {
         pointerEvents: 'none',
       }} />
 
-      <div style={{ position: 'absolute', top: 40, left: 40, zIndex: 20 }}>
-        <span style={{ fontSize: '11px', color: '#22d3ee', fontWeight: 600, letterSpacing: '0.1em', fontFamily: '"DM Sans", sans-serif' }}>CAPACIDADES DE LA PLATAFORMA</span>
-      </div>
-
-      <div style={{ width: '100%', margin: '0', padding: '0 40px', position: 'relative', zIndex: 10 }}>
+      <div style={{ width: '100%', margin: '0 auto', padding: '0 40px', position: 'relative', zIndex: 10 }}>
 
         {/* Layout literal estilo Antigravity: Tabs en burbujas a la izquierda, Texto central */}
         <div className="antigravity-layout" style={{ 
@@ -63,8 +59,15 @@ export default function Features() {
             flexDirection: 'column', 
             gap: '12px',
             width: '280px',
-            flexShrink: 0
+            flexShrink: 0,
+            position: 'relative'
           }}>
+            <div style={{ position: 'absolute', top: '-100px', left: '24px' }}>
+              <span style={{ fontSize: '11px', fontWeight: 600, letterSpacing: '0.1em', fontFamily: '"DM Sans", sans-serif', textTransform: 'uppercase' }}>
+                <span style={{ color: '#ffffff' }}>Capacidades de </span>
+                <span style={{ color: '#8B5CF6' }}>Sherlock</span>
+              </span>
+            </div>
             {TABS_DATA.map((tab, idx) => {
               const isActive = activeTab === idx;
               const Icon = tab.icon;

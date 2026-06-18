@@ -163,8 +163,11 @@ function ExpandableRow({ item, index }) {
 
 export default function Comparison() {
   return (
-    <section id="comparison" style={{ padding: '120px 24px', position: 'relative' }}>
-      <div style={{ maxWidth: 1200, margin: '0 auto' }}>
+    <section id="comparison" style={{ padding: '120px 24px', position: 'relative', background: '#000000', overflow: 'hidden' }}>
+      {/* Efecto de resplandor suave */}
+      <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '150vw', height: '150vh', background: 'radial-gradient(ellipse at center, rgba(56, 189, 248, 0.08) 0%, rgba(167, 139, 250, 0.05) 30%, transparent 65%)', pointerEvents: 'none', zIndex: 0 }} />
+
+      <div style={{ maxWidth: 1200, margin: '0 auto', position: 'relative', zIndex: 10 }}>
         <motion.div initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }} style={{ textAlign: 'center', marginBottom: 80 }}>
           <h2 style={{ fontSize: 'clamp(32px, 5vw, 56px)', fontWeight: 800, fontFamily: 'Space Grotesk, sans-serif', letterSpacing: '-0.02em', marginBottom: 16 }}>
             <span style={{ color: '#94a3b8', fontSize: '0.8em' }}>Usuarios Reales</span>

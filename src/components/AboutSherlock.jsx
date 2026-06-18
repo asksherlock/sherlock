@@ -8,15 +8,15 @@ export default function AboutSherlock() {
   const accordionItems = [
     {
       title: "01. El Problema",
-      content: "La validación cualitativa tradicional genera cuellos de botella críticos en el desarrollo. El proceso requiere semanas de logística, incentivos elevados y sufre de un alto índice de cancelaciones. Además, las pruebas humanas están expuestas al sesgo de deseabilidad social. Como consecuencia, las organizaciones despliegan funciones basadas en datos inexactos, detectando errores de interfaz directamente en producción."
+      content: "La investigación tradicional es lenta, costosa y difícil de escalar. Reclutar participantes, coordinar entrevistas y procesar resultados puede tomar semanas, además de estar sujeto a cancelaciones, muestras limitadas y sesgos inherentes a las respuestas humanas. Esto obliga a muchas organizaciones a tomar decisiones con información insuficiente o retrasar iniciativas críticas mientras esperan resultados."
     },
     {
-      title: "02. Nuestra Solución",
-      content: "Reducimos los tiempos de obtención de insights de semanas a minutos. Nuestra infraestructura permite estresar flujos de conversión, evaluar la arquitectura de embudos digitales y mapear la respuesta de arquetipos de usuario bajo demanda. Al automatizar la simulación en etapas tempranas del diseño, transformamos el research en un proceso ágil, escalable y predictivo."
+      title: "02. La Solución",
+      content: "Transformamos la investigación cualitativa en un proceso inmediato y escalable. Sherlock permite construir audiencias sintéticas, ejecutar miles de entrevistas simultáneas y analizar automáticamente las respuestas para identificar patrones, motivaciones, objeciones y oportunidades. Lo que antes requería semanas de trabajo, ahora puede obtenerse en minutos, acelerando la toma de decisiones con información estructurada y accionable."
     },
     {
       title: "03. La Tecnología",
-      content: "Sintetizamos variables demográficas y psicológicas para estructurar agentes de simulación autónomos. El sistema procesa perfiles configurados con historias de vida consistentes, niveles de paciencia digital y sesgos cognitivos calibrados para Latinoamérica. Esto permite inyectar flujos de navegación reales, ejecutar miles de jornadas concurrentes y recibir diagnósticos de usabilidad específicos en minutos."
+      content: "Combinamos modelos avanzados de inteligencia artificial con variables demográficas, socioeconómicas y psicográficas para crear agentes sintéticos con comportamientos consistentes y contextualmente relevantes. Cada perfil configurado, posee motivaciones, preferencias y características propias, permitiendo simular conversaciones masivas y generar análisis cualitativos automatizados que revelan insights estratégicos con una profundidad difícil de alcanzar mediante métodos tradicionales."
     }
   ];
 
@@ -62,7 +62,7 @@ export default function AboutSherlock() {
                 QUÉ HACEMOS…
               </h2>
               <p style={{ fontFamily: '"DM Sans", sans-serif', fontSize: '18px', color: '#cbd5e1', lineHeight: 1.7, maxWidth: 460, fontWeight: 300 }}>
-                Desarrollamos un sistema automatizado de usuarios sintéticos para optimizar ciclos de desarrollo de producto. Reemplazamos el reclutamiento tradicional y el fieldwork cualitativo por simulaciones matemáticas basadas en modelos de comportamiento, permitiendo a los equipos identificar fricciones de usabilidad críticas antes de escribir código.
+                Desarrollamos una plataforma de investigación cualitativa basada en usuarios sintéticos impulsados por inteligencia artificial. Reemplazamos semanas de reclutamiento y trabajo de campo por simulaciones conversacionales a escala, permitiendo a empresas y equipos obtener insights sobre necesidades, percepciones y comportamientos de sus audiencias en cuestión de minutos.
               </p>
             </motion.div>
           </div>
