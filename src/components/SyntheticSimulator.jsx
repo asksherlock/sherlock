@@ -103,22 +103,23 @@ export default function SyntheticSimulator() {
     generateNewProfile();
   }, []);
 
-  const generateNewProfile = async () => {
-    if (isGenerating) return;
-    
-    let newProf = randomFrom(BASE_PROFILES);
-    if (newProf.name === profile.name) {
-      newProf = BASE_PROFILES.find(p => p.name !== profile.name) || newProf;
-    }
-    setProfile(newProf);
-    setMessages([]);
-    setActiveScript([]);
-    setIsGenerating(true);
+  const generateNewProfile = () => {
+    setProfile(currentProfile => {
+      let newProf = randomFrom(BASE_PROFILES);
+      if (newProf.name === currentProfile.name) {
+        newProf = BASE_PROFILES.find(p => p.name !== currentProfile.name) || newProf;
+      }
+      setMessages([]);
+      setActiveScript([]);
+      setIsGenerating(true);
 
-    setTimeout(() => {
-      setActiveScript(newProf.script);
-      setIsGenerating(false);
-    }, 1500); // Simulate network latency
+      setTimeout(() => {
+        setActiveScript(newProf.script);
+        setIsGenerating(false);
+      }, 1500); // Simulate network latency
+      
+      return newProf;
+    });
   };
 
   useEffect(() => {
@@ -129,8 +130,16 @@ export default function SyntheticSimulator() {
     if (activeScript.length === 0 || isGenerating) return;
 
     const playNext = () => {
-      if (isCancelled || step >= activeScript.length) {
+      if (isCancelled) return;
+      
+      if (step >= activeScript.length) {
         setIsTyping(false);
+        // Bucle infinito: cuando termina el chat, espera 4 segundos y carga otro
+        timeoutId = setTimeout(() => {
+          if (!isCancelled) {
+            generateNewProfile();
+          }
+        }, 4000);
         return;
       }
       
@@ -146,9 +155,7 @@ export default function SyntheticSimulator() {
           setMessages(prev => [...prev, { ...msg, id: Date.now().toString() + step }]);
           step++;
           
-          if (step < activeScript.length) {
-            timeoutId = setTimeout(playNext, 800); 
-          }
+          timeoutId = setTimeout(playNext, 800); 
         }
       }, typingDelay);
     };
@@ -161,7 +168,7 @@ export default function SyntheticSimulator() {
       isCancelled = true;
       clearTimeout(timeoutId);
     };
-  }, [activeScript, isGenerating]);
+  }, [activeScript]); // Eliminar isGenerating de la dependencia para evitar dobles bucles
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -183,12 +190,7 @@ export default function SyntheticSimulator() {
         <div style={{ flex: 1, textAlign: 'center' }}>
           <span style={{ fontSize: '12px', color: '#6366f1', fontWeight: 600, letterSpacing: '0.05em' }}>SHERLOCK AI — SYNTHETIC ENGINE</span>
         </div>
-        <button 
-          onClick={generateNewProfile}
-          style={{ background: 'none', border: '1px solid rgba(99,102,241,0.4)', borderRadius: 6, color: '#a5b4fc', fontSize: '12px', cursor: 'pointer', padding: '6px 12px', display: 'flex', alignItems: 'center', fontWeight: 600 }}
-        >
-          <ShuffleIcon /> Random
-        </button>
+        <div style={{ width: 14 }}></div> {/* Espacio invisible para centrar el texto correctamente */}
       </div>
 
       {/* Profile header */}

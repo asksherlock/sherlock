@@ -15,41 +15,24 @@ export default function FloatingRobot() {
   const velRef = useRef({ x: -1, y: 0.5 });
   const animRef = useRef(null);
 
+  const anchorRef = useRef({ 
+    x: typeof window !== 'undefined' ? window.innerWidth * (0.6 + Math.random() * 0.3) : 800, 
+    y: typeof window !== 'undefined' ? window.innerHeight * (0.2 + Math.random() * 0.6) : 400 
+  });
+  
   // Random floating movement
   useEffect(() => {
     if (showChat) return; // Stop moving while chatting
     
-    let lastTime = performance.now();
+    const startTime = performance.now();
     
     const update = (time) => {
-      const dt = (time - lastTime) / 16; // normalize to 60fps
-      lastTime = time;
+      // Bobbing around the random anchor
+      const elapsed = time - startTime;
+      const newX = anchorRef.current.x + Math.sin(elapsed / 1500) * 20;
+      const newY = anchorRef.current.y + Math.cos(elapsed / 1000) * 15;
 
-      // Randomly steer velocity
-      velRef.current.x += (Math.random() - 0.5) * 0.1 * dt;
-      velRef.current.y += (Math.random() - 0.5) * 0.1 * dt;
-
-      // Cap speed
-      const speed = Math.sqrt(velRef.current.x ** 2 + velRef.current.y ** 2);
-      if (speed > 2) {
-        velRef.current.x = (velRef.current.x / speed) * 2;
-        velRef.current.y = (velRef.current.y / speed) * 2;
-      }
-
-      // Update position
-      posRef.current.x += velRef.current.x * dt;
-      posRef.current.y += velRef.current.y * dt;
-
-      // Wrap around screen X
-      if (posRef.current.x > window.innerWidth + 50) posRef.current.x = -50;
-      if (posRef.current.x < -50) posRef.current.x = window.innerWidth + 50;
-
-      // Wrap around screen Y (or bounce)
-      // Let's make it wrap around Y too so it feels like infinite space
-      if (posRef.current.y > window.innerHeight + 50) posRef.current.y = -50;
-      if (posRef.current.y < -50) posRef.current.y = window.innerHeight + 50;
-
-      setPos({ x: posRef.current.x, y: posRef.current.y });
+      setPos({ x: newX, y: newY });
       animRef.current = requestAnimationFrame(update);
     };
 
@@ -95,12 +78,12 @@ export default function FloatingRobot() {
           cursor: 'pointer',
         }}
         initial={{ opacity: 0, scale: 0.8, filter: 'blur(10px)' }}
-        animate={{ opacity: 1, scale: 1, filter: 'blur(0px)', rotate: velRef.current.x > 0 ? 5 : -5 }}
+        animate={{ opacity: 1, scale: 1, filter: 'blur(0px)', rotate: Math.sin(Date.now() / 1000) * 3 }}
         transition={{ 
           opacity: { duration: 2.0, delay: 4.0, ease: 'easeInOut' },
           scale: { duration: 2.0, delay: 4.0, ease: 'easeInOut' },
           filter: { duration: 2.0, delay: 4.0, ease: 'easeInOut' },
-          rotate: { type: 'tween', duration: 0.5 }
+          rotate: { type: 'tween', duration: 1.5, repeat: Infinity, repeatType: 'reverse', ease: 'easeInOut' }
         }}
         onClick={() => setShowChat(!showChat)}
       >

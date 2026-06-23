@@ -72,7 +72,13 @@ export default function Hero() {
           }}
         >
           <span style={{ fontWeight: 600, display: 'block' }}>Tu Cliente Ideal</span>
-          <span style={{ fontWeight: 300, display: 'block', color: '#E9D5FF' }}>En Minutos</span>
+          <span style={{ 
+            fontWeight: 400, 
+            display: 'block', 
+            background: 'linear-gradient(135deg, #818cf8, #c084fc)', 
+            WebkitBackgroundClip: 'text', 
+            WebkitTextFillColor: 'transparent' 
+          }}>En Minutos</span>
         </motion.h1>
         {/* 4. Subtitle at the bottom */}
         <motion.p {...revealEffect(4.0)} style={{ 
