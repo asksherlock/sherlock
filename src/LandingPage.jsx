@@ -2,7 +2,6 @@ import React, { Suspense, useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
-import FloatingRobot from './components/FloatingRobot';
 import StarfieldBackground from './components/StarfieldBackground';
 
 // Lazy load below-the-fold components
@@ -57,9 +56,6 @@ export default function LandingPage() {
           </Suspense>
         )}
       </div>
-      
-      {/* Mascot Robot */}
-      <FloatingRobot />
       
       {/* Contenedor interactivo */}
       <div style={{ position: 'relative', zIndex: 10, pointerEvents: 'none' }}>

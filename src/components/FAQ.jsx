@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import FloatingRobot from './FloatingRobot';
 
 const FAQS = [
   {
@@ -25,7 +26,8 @@ export default function FAQ() {
 
   return (
     <section id="faq" style={{ padding: '100px 24px', position: 'relative' }}>
-      <div style={{ maxWidth: 800, margin: '0 auto' }}>
+      <FloatingRobot />
+      <div style={{ maxWidth: 800, margin: '0 auto', position: 'relative', zIndex: 10 }}>
         <motion.div initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }} style={{ textAlign: 'center', marginBottom: 60 }}>
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '5px 14px', borderRadius: 100, background: 'rgba(99,102,241,0.08)', border: '1px solid rgba(99,102,241,0.2)', marginBottom: 20 }}>
             <span style={{ fontSize: '11px', color: '#818cf8', fontWeight: 600, letterSpacing: '0.08em' }}>PREGUNTAS Y DUDAS</span>

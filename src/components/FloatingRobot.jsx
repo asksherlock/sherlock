@@ -12,12 +12,10 @@ export default function FloatingRobot() {
   // Physics state for random movement
   const [pos, setPos] = useState({ x: typeof window !== 'undefined' ? window.innerWidth * 0.8 : 800, y: 200 });
   const posRef = useRef({ x: typeof window !== 'undefined' ? window.innerWidth * 0.8 : 800, y: 200 });
-  const velRef = useRef({ x: -1, y: 0.5 });
   const animRef = useRef(null);
-
   const anchorRef = useRef({ 
-    x: typeof window !== 'undefined' ? window.innerWidth * (0.6 + Math.random() * 0.3) : 800, 
-    y: typeof window !== 'undefined' ? window.innerHeight * (0.2 + Math.random() * 0.6) : 400 
+    x: typeof window !== 'undefined' ? (window.innerWidth > 1000 ? window.innerWidth * 0.8 : window.innerWidth * 0.7) : 800, 
+    y: 150 
   });
   
   // Random floating movement
@@ -70,7 +68,7 @@ export default function FloatingRobot() {
     <>
       <motion.div
         style={{
-          position: 'fixed',
+          position: 'absolute',
           left: 0, top: 0,
           x: pos.x,
           y: pos.y,
