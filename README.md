@@ -1,84 +1,69 @@
-# 🕵️‍♂️ Ask-Sherlock: AI Landing Page
+# 🕵️‍♂️ Sherlock AI - Full Stack Platform
 
-¡Bienvenido al repositorio oficial de **Ask-Sherlock**! Esta es una landing page interactiva, inmersiva y de alto rendimiento que demuestra el poder de los **Usuarios Sintéticos** impulsados por Inteligencia Artificial para la investigación UX/UI.
+Sherlock AI es una plataforma moderna construida con una arquitectura Full-Stack que combina un frontend interactivo y rápido con un sistema de gestión de contenido (CMS) robusto y altamente personalizado.
 
-A través de simulaciones en tiempo real, físicas complejas en Canvas y un asistente virtual integrado, esta plataforma no solo *explica* el producto, sino que lo **demuestra** directamente al visitante.
+## 🚀 Tecnologías Principales
 
----
+*   **Frontend**: React + Vite
+*   **Backend / CMS**: Payload CMS 3.0 (Next.js App Router)
+*   **Base de Datos**: PostgreSQL (alojada en Supabase)
+*   **Estilos**: Diseño Neumórfico / Glassmorphism con Vanilla CSS
 
-## ✨ Características Principales
+## ✨ Características Destacadas
 
-1. 🌌 **Físicas y Partículas Interactivas:**
-   - Motores de renderizado en HTML5 Canvas (`StarfieldBackground`, `ParticleCanvas`, `Medusae`).
-   - Fondos espaciales que reaccionan de manera fluida a la posición del cursor con efectos de repulsión gravitacional, ondas de choque e inercia.
+1.  **Frontend Ultra Rápido**
+    *   Landing page optimizada con efectos visuales modernos.
+    *   Rutas dinámicas para el Blog que consumen la API REST del CMS.
+    *   Diseño responsivo y amigable para el usuario.
+2.  **Panel de Administración Inteligente (Custom Dashboard)**
+    *   Panel de Payload CMS totalmente re-diseñado con la identidad visual de "Ask Sherlock".
+    *   **Dashboard Estadístico en Tiempo Real**: Tarjetas con efecto neón que muestran la cantidad de artículos, servicios, usuarios y el estado del sistema.
+    *   Organización de colecciones modular (System, Content, Business).
+3.  **Control de Versiones y Borradores (Estilo Google Docs)**
+    *   Todas las colecciones principales (Artículos, Servicios, Portafolios) cuentan con sistema de versiones.
+    *   Capacidad de guardar "Borradores" (Drafts) sin publicarlos al frontend.
+    *   Historial completo de ediciones para restaurar versiones pasadas.
+4.  **Base de Datos en Supabase (IPv4 Session Pooling)**
+    *   Conexión estable utilizando el *Session Pooler* de Supavisor (puerto 5432).
+    *   Garantiza máxima compatibilidad con redes y frameworks modernos.
 
-2. 🤖 **Sherlock Bot (Asistente Integrado):**
-   - Un robot asistente flotante inteligente (`FloatingRobot.jsx`) anclado en la vista.
-   - Cuenta con una interfaz de chat interactiva que asiste a los usuarios respondiendo dudas en tiempo real con un tono persuasivo.
+## 📦 Estructura del Proyecto
 
-3. 💬 **Motor Sintético Interactivo (Simulador de Entrevistas):**
-   - Una demostración en vivo (`SyntheticSimulator.jsx`) en bucle continuo.
-   - Simula chats 1 a 1 con múltiples perfiles de usuarios (ej. *Millennial Compradora*, *Abuelo Tech*, *Director TI*), mostrando cómo la plataforma se adapta a variables sociodemográficas y psicográficas reales.
+El repositorio está dividido en dos partes fundamentales:
 
-4. ⚡ **Rendimiento Extremo (Lazy Loading):**
-   - Implementación de intersecciones (`useInView`) y Code-Splitting (`React.lazy`, `Suspense`).
-   - Todos los componentes y scripts interactivos bajo el pliegue (below the fold) se cargan de forma diferida únicamente cuando el usuario desliza la pantalla hacia ellos, asegurando una carga inicial instantánea.
+*   `/` (Directorio Raíz): Contiene el código del Frontend (Vite + React). Aquí se manejan los componentes visuales de la landing page y el renderizado del blog.
+*   `/cms`: Contiene el Backend (Payload CMS 3.0). Es un proyecto de Next.js independiente que administra la base de datos y provee las APIs de contenido.
 
-5. 🌊 **Marquesina Gravitacional de Marcas:**
-   - Un carrusel infinito de clientes (`Clients.jsx`) con un patrón orgánico de flotación senoidal que aporta credibilidad sin aburrir a nivel visual.
+## 🛠️ Instalación y Uso Local
 
----
-
-## 🛠️ Tecnologías Utilizadas
-
-- **Core:** React 18 + Vite (Entorno de desarrollo super-rápido)
-- **Estilos UI:** Vanilla CSS (Glassmorphism, mallas gradientes, variables CSS nativas)
-- **Animaciones e Interacciones:** Framer Motion (Transiciones de orquestación, aparición escalonada)
-- **Efectos Visuales:** JS nativo con `requestAnimationFrame` en elementos `<canvas>`
-
----
-
-## 🚀 Instalación y Ejecución Local
-
-Si deseas clonar y correr este proyecto en tu entorno local, sigue estos pasos:
+Para levantar el proyecto en tu entorno local, necesitas tener instalado Node.js (v18+).
 
 ### 1. Clonar el repositorio
-Abre tu terminal y ejecuta:
 ```bash
 git clone https://github.com/asksherlock/sherlock.git
 cd sherlock
 ```
 
-### 2. Instalar dependencias
-Asegúrate de tener Node.js instalado. Instala las dependencias necesarias de npm:
+### 2. Configurar Variables de Entorno
+Dentro de la carpeta `cms/`, debes tener un archivo `.env` con las siguientes credenciales (asegúrate de colocar las tuyas):
+
+```env
+DATABASE_URI=postgresql://[usuario]:[password]@[pooler-url].supabase.com:5432/postgres
+PAYLOAD_SECRET=tu-secreto-super-seguro
+```
+
+### 3. Instalar Dependencias y Arrancar
+Hemos configurado un script global que levantará **ambos servidores al mismo tiempo** (Frontend en el puerto `5173` y Backend en el puerto `4000`).
+
+Desde la raíz del proyecto, ejecuta:
 ```bash
 npm install
+npm run dev:all
 ```
 
-### 3. Iniciar el servidor de desarrollo
-Levanta el servidor local de Vite con el siguiente comando:
-```bash
-npm run dev
-```
-La aplicación estará disponible inmediatamente en `http://localhost:5173`. Todos los cambios se reflejarán instantáneamente gracias al Hot Module Replacement (HMR).
+*   **Frontend**: `http://localhost:5173`
+*   **Panel CMS**: `http://localhost:4000/admin`
+*   **API del CMS**: `http://localhost:4000/api`
 
 ---
-
-## 📂 Arquitectura Principal
-
-El diseño del proyecto es modular y cada componente de la Landing Page está desacoplado:
-
-- `/src/LandingPage.jsx` - Componente raíz que orquesta la carga diferida (Lazy Loading) y posiciona las capas espaciales.
-- `/src/components/` - Todos los bloques visuales funcionales.
-  - `SyntheticSimulator.jsx` - Motor del chat con bucles infinitos de pruebas.
-  - `FloatingRobot.jsx` - El asistente flotante anclado en pantalla.
-  - `Hero.jsx`, `CTA.jsx`, `Pricing.jsx`, `Features.jsx` - Secciones descriptivas de la página.
-- `/src/components/medusae/` - Motores de física de enjambre de partículas en Canvas.
-
----
-
-## 🤝 Contribución
-Siéntete libre de inspeccionar el código, abrir un *Issue* o enviar un *Pull Request* si encuentras áreas de mejora (¡especialmente en el rendimiento del canvas!).
-
-## 📄 Licencia
-Este proyecto es propiedad de **Innogyzer** y Ask-Sherlock. Todos los derechos reservados.
+*Desarrollado con ❤️ para Sherlock AI.*

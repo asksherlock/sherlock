@@ -3,10 +3,11 @@ import { motion } from 'framer-motion';
 import SherlockLogo from './SherlockLogo';
 
 const NAV_LINKS = [
-  { label: 'Plataforma', href: '#platform' },
-  { label: 'Cómo funciona', href: '#how-it-works' },
-  { label: 'Planes', href: '#pricing' },
-  { label: 'Clientes', href: '#clients' },
+  { label: 'Plataforma', href: '/#platform' },
+  { label: 'Cómo funciona', href: '/#how-it-works' },
+  { label: 'Planes', href: '/#pricing' },
+  { label: 'Clientes', href: '/#clients' },
+  { label: 'Blog', href: '/blog' },
 ];
 
 export default function Navbar() {

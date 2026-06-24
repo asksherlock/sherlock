@@ -1,0 +1,39 @@
+{
+  "name": "sherlock-cms",
+  "version": "1.0.0",
+  "description": "Payload 3.0 Backend for Sherlock",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "build": "cross-env NODE_OPTIONS=\"--no-deprecation\" payload build",
+    "dev": "cross-env NODE_OPTIONS=--no-deprecation next dev -p 4000",
+    "devsafe": "rm -rf .next && cross-env NODE_OPTIONS=--no-deprecation next dev -p 4000",
+    "generate:importmap": "cross-env NODE_OPTIONS=--no-deprecation payload generate:importmap",
+    "generate:types": "cross-env NODE_OPTIONS=--no-deprecation payload generate:types",
+    "payload": "cross-env NODE_OPTIONS=--no-deprecation payload",
+    "start": "cross-env NODE_OPTIONS=--no-deprecation next start -p 4000"
+  },
+  "dependencies": {
+    "@payloadcms/db-postgres": "latest",
+    "@payloadcms/next": "latest",
+    "@payloadcms/richtext-lexical": "latest",
+    "@payloadcms/ui": "latest",
+    "cross-env": "^7.0.3",
+    "dotenv": "^16.4.5",
+    "graphql": "^16.8.1",
+    "next": "^15.0.0",
+    "payload": "latest",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "sharp": "0.33.5"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "@types/react": "npm:types-react@19.0.0-rc.1",
+    "@types/react-dom": "npm:types-react-dom@19.0.0-rc.1",
+    "typescript": "^5.6.0"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}
