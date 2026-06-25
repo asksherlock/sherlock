@@ -31,7 +31,7 @@ export default function Features() {
   const [activeTab, setActiveTab] = useState(0);
 
   return (
-    <section id="platform" style={{ padding: '40px 24px', position: 'relative', overflow: 'hidden', background: '#000000', minHeight: '100vh', display: 'flex', alignItems: 'center' }}>
+    <section id="features" style={{ padding: '40px 24px', position: 'relative', overflow: 'hidden', background: '#000000', minHeight: '100vh', display: 'flex', alignItems: 'center' }}>
       
       {/* Sistema de partículas que forman formas vectoriales (Fondo) */}
       <ShapeParticleCanvas activeTab={activeTab} />

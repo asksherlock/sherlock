@@ -2,12 +2,20 @@ import type { CollectionConfig } from 'payload'
 
 export const Posts: CollectionConfig = {
   slug: 'posts',
+  labels: {
+    singular: 'Artículo',
+    plural: 'Artículos',
+  },
   admin: {
     useAsTitle: 'title',
-    group: 'Content',
+    group: 'Contenido',
   },
   access: {
-    read: () => true, // Publicly readable API
+    read: () => true,
+    create: ({ req }) => Boolean(req?.user),
+    update: ({ req }) => Boolean(req?.user),
+    delete: ({ req }) => Boolean(req?.user),
+    readVersions: ({ req }) => Boolean(req?.user),
   },
   versions: {
     drafts: true,
@@ -17,12 +25,14 @@ export const Posts: CollectionConfig = {
       name: 'title',
       type: 'text',
       required: true,
+      label: 'Título',
     },
     {
       name: 'slug',
       type: 'text',
       required: true,
       unique: true,
+      label: 'Enlace (Slug)',
       admin: {
         position: 'sidebar',
       },
@@ -41,16 +51,18 @@ export const Posts: CollectionConfig = {
       },
     },
     {
-      name: 'heroImage',
+      name: 'featuredImage',
       type: 'upload',
-      relationTo: 'media', // Assuming default Media collection exists
-      required: false,
+      relationTo: 'media',
+      required: true,
+      label: 'Imagen de Portada',
     },
     {
       name: 'author',
       type: 'relationship',
       relationTo: 'users',
       required: false,
+      label: 'Autor',
       admin: {
         position: 'sidebar',
       },
@@ -58,6 +70,7 @@ export const Posts: CollectionConfig = {
     {
       name: 'publishedAt',
       type: 'date',
+      label: 'Fecha de Publicación',
       admin: {
         position: 'sidebar',
       },
@@ -65,11 +78,14 @@ export const Posts: CollectionConfig = {
     {
       name: 'excerpt',
       type: 'textarea',
+      required: true,
+      label: 'Extracto corto para SEO',
     },
     {
       name: 'content',
       type: 'richText',
       required: true,
+      label: 'Cuerpo del artículo',
     },
   ],
 }

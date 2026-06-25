@@ -58,20 +58,7 @@ export default function StarfieldBackground() {
     resize();
     window.addEventListener('resize', resize);
     
-    // Click for Shockwave
-    const onClick = (e) => {
-      // Disable shockwave if the user has scrolled past the hero section
-      if (window.scrollY > window.innerHeight * 0.8) return;
-      
-      ripplesRef.current.push({
-        x: e.clientX,
-        y: e.clientY,
-        radius: 0,
-        maxRadius: Math.max(w, h) * 1.5,
-        speed: 15,
-        width: 100 
-      });
-    };
+    // Ripple click effect removed completely
     
     // Track mouse for local attraction
     let mx = -9999, my = -9999;
@@ -80,7 +67,7 @@ export default function StarfieldBackground() {
       my = e.clientY;
     };
 
-    window.addEventListener('click', onClick);
+    // window.addEventListener('click', onClick) removed
     window.addEventListener('mousemove', onMouseMove);
 
     const draw = () => {
@@ -91,13 +78,7 @@ export default function StarfieldBackground() {
       const particles = particlesRef.current;
       const ripples = ripplesRef.current;
 
-      // Update ripples
-      for (let i = ripples.length - 1; i >= 0; i--) {
-        ripples[i].radius += ripples[i].speed;
-        if (ripples[i].radius > ripples[i].maxRadius) {
-          ripples.splice(i, 1);
-        }
-      }
+      // Update ripples removed
 
       for (let i = 0; i < particles.length; i++) {
         const p = particles[i];
@@ -146,30 +127,7 @@ export default function StarfieldBackground() {
           opacity = Math.min(1.0, opacity + force * 0.4);
         }
 
-        // Apply shockwave physics
-        for (const r of ripples) {
-          const dx = p.x - r.x; // Use physical position
-          const dy = p.y - r.y;
-          const distSq = dx * dx + dy * dy;
-          
-          // Fast pre-check
-          const rMax = r.radius + r.width;
-          if (distSq < rMax * rMax) {
-            const dist = Math.sqrt(distSq);
-            const waveDist = Math.abs(dist - r.radius);
-            
-            if (waveDist < r.width) {
-              isActiveRipple = true;
-              angle = Math.atan2(dy, dx);
-              
-              const force = (r.width - waveDist) / r.width;
-              targetX += Math.cos(angle) * force * 40;
-              targetY += Math.sin(angle) * force * 40;
-              
-              stretch = Math.max(stretch, 1 + (r.radius * force * 0.015));
-            }
-          }
-        }
+        // Apply shockwave physics removed
 
         // Spring physics para un movimiento fluido y suave
         const ax = (targetX - p.x) * 0.015;
@@ -225,7 +183,6 @@ export default function StarfieldBackground() {
     return () => {
       cancelAnimationFrame(animRef.current);
       window.removeEventListener('resize', resize);
-      window.removeEventListener('click', onClick);
       window.removeEventListener('mousemove', onMouseMove);
     };
   }, []);

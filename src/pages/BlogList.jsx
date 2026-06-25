@@ -10,7 +10,8 @@ export default function BlogList() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch('http://localhost:4000/api/posts')
+    window.scrollTo(0, 0);
+    fetch('http://localhost:4000/api/posts?depth=1')
       .then(res => res.json())
       .then(data => {
         setPosts(data.docs || []);
@@ -23,85 +24,75 @@ export default function BlogList() {
   }, []);
 
   return (
-    <div style={{ background: '#000000', color: '#f8fafc', minHeight: '100vh', fontFamily: '"Inter", sans-serif', position: 'relative' }}>
+    <div className="bg-black text-slate-50 min-h-screen font-sans relative overflow-hidden">
       <StarfieldBackground />
       
-      <div style={{ position: 'relative', zIndex: 10 }}>
+      <div className="relative z-10 flex flex-col min-h-screen">
         <Navbar />
         
-        <main style={{ maxWidth: 1200, margin: '0 auto', padding: '150px 24px 100px' }}>
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-            <h1 style={{ fontSize: 'clamp(40px, 6vw, 64px)', fontWeight: 800, fontFamily: 'Space Grotesk, sans-serif', marginBottom: 20, background: 'linear-gradient(135deg, #f8fafc, #94a3b8)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+        <main className="flex-1 max-w-7xl w-full mx-auto px-6 pt-36 pb-24">
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="mb-16 text-center md:text-left">
+            <h1 className="text-5xl md:text-7xl font-extrabold mb-6 text-transparent bg-clip-text bg-gradient-to-br from-slate-50 to-slate-400">
               Blog & Insights
             </h1>
-            <p style={{ fontSize: '20px', color: '#94a3b8', maxWidth: 600, marginBottom: 60 }}>
+            <p className="text-xl md:text-2xl text-slate-400 max-w-2xl mx-auto md:mx-0 leading-relaxed font-light">
               Descubre las últimas tendencias en investigación de usuarios, IA sintética y optimización de productos.
             </p>
           </motion.div>
 
           {loading ? (
-            <div style={{ display: 'flex', justifyContent: 'center', padding: '100px 0' }}>
-              <div style={{ width: 40, height: 40, borderRadius: '50%', border: '3px solid rgba(99,102,241,0.2)', borderTopColor: '#6366f1', animation: 'spin 1s linear infinite' }} />
+            <div className="flex justify-center items-center py-32">
+              <div className="w-12 h-12 rounded-full border-4 border-indigo-500/20 border-t-indigo-500 animate-spin" />
             </div>
           ) : posts.length === 0 ? (
-            <div style={{ textAlign: 'center', padding: '100px 0', color: '#64748b', fontSize: '18px' }}>
+            <div className="text-center py-32 text-slate-500 text-lg font-medium">
               No hay artículos publicados todavía.
             </div>
           ) : (
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))', gap: 32 }}>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {posts.map((post, i) => (
                 <motion.div 
                   key={post.id}
-                  initial={{ opacity: 0, y: 20 }}
+                  initial={{ opacity: 0, y: 30 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: i * 0.1 }}
+                  transition={{ delay: i * 0.1, duration: 0.5 }}
                 >
-                  <Link to={`/blog/${post.slug}`} style={{ textDecoration: 'none' }}>
-                    <div style={{
-                      background: 'rgba(255,255,255,0.03)',
-                      border: '1px solid rgba(255,255,255,0.05)',
-                      borderRadius: 24,
-                      overflow: 'hidden',
-                      height: '100%',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      transition: 'all 0.3s',
-                      cursor: 'pointer'
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.background = 'rgba(255,255,255,0.05)';
-                      e.currentTarget.style.borderColor = 'rgba(99,102,241,0.3)';
-                      e.currentTarget.style.transform = 'translateY(-5px)';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.background = 'rgba(255,255,255,0.03)';
-                      e.currentTarget.style.borderColor = 'rgba(255,255,255,0.05)';
-                      e.currentTarget.style.transform = 'translateY(0)';
-                    }}
-                    >
-                      {post.heroImage && (
-                        <div style={{ width: '100%', height: 200, background: `url(http://localhost:4000${post.heroImage.url}) center/cover` }} />
-                      )}
-                      {!post.heroImage && (
-                        <div style={{ width: '100%', height: 200, background: 'linear-gradient(135deg, rgba(99,102,241,0.2), rgba(139,92,246,0.1))', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                          <span style={{ fontSize: '40px' }}>🕵️‍♂️</span>
-                        </div>
-                      )}
-                      <div style={{ padding: 32, flex: 1, display: 'flex', flexDirection: 'column' }}>
-                        <div style={{ fontSize: '13px', color: '#818cf8', fontWeight: 600, marginBottom: 12 }}>
+                  <Link to={`/blog/${post.slug}`} className="block h-full group">
+                    <article className="h-full flex flex-col rounded-3xl overflow-hidden bg-white/[0.02] border border-white/[0.05] backdrop-blur-md hover:border-purple-500/30 hover:bg-white/[0.04] hover:-translate-y-2 transition-all duration-300 shadow-2xl">
+                      
+                      <div className="relative h-56 w-full bg-slate-900/50 overflow-hidden">
+                        {post.featuredImage ? (
+                          <img 
+                            src={`http://localhost:4000${post.featuredImage.url}`} 
+                            alt={post.featuredImage.alt || post.title}
+                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
+                          />
+                        ) : (
+                          <div className="w-full h-full bg-gradient-to-br from-indigo-500/20 to-purple-600/10 flex items-center justify-center">
+                            <span className="text-5xl opacity-50 group-hover:scale-110 transition-transform duration-500">🕵️‍♂️</span>
+                          </div>
+                        )}
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
+                      </div>
+
+                      <div className="p-8 flex flex-col flex-1">
+                        <time className="text-sm font-semibold text-purple-400 mb-4 tracking-wider uppercase">
                           {new Date(post.publishedAt || post.createdAt).toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' })}
-                        </div>
-                        <h2 style={{ fontSize: '24px', fontWeight: 700, color: '#f8fafc', marginBottom: 16, lineHeight: 1.3 }}>
+                        </time>
+                        
+                        <h2 className="text-2xl font-semibold text-white mb-4 leading-snug group-hover:text-purple-300 transition-colors">
                           {post.title}
                         </h2>
-                        <p style={{ color: '#94a3b8', fontSize: '15px', lineHeight: 1.6, flex: 1 }}>
-                          {post.excerpt || 'Haz clic para leer el artículo completo...'}
+                        
+                        <p className="text-slate-400 text-base leading-relaxed flex-1 font-light">
+                          {post.excerpt || 'Haz clic para leer el artículo completo y explorar los detalles a fondo.'}
                         </p>
-                        <div style={{ marginTop: 24, fontSize: '14px', color: '#6366f1', fontWeight: 600, display: 'flex', alignItems: 'center', gap: 8 }}>
-                          Leer más <span style={{ fontSize: '18px' }}>→</span>
+                        
+                        <div className="mt-8 pt-6 border-t border-white/5 flex items-center text-sm font-medium text-indigo-400 group-hover:text-indigo-300 transition-colors">
+                          Leer artículo <span className="ml-2 text-lg transform group-hover:translate-x-1 transition-transform">→</span>
                         </div>
                       </div>
-                    </div>
+                    </article>
                   </Link>
                 </motion.div>
               ))}
@@ -111,9 +102,6 @@ export default function BlogList() {
         
         <Footer />
       </div>
-      <style>{`
-        @keyframes spin { 100% { transform: rotate(360deg); } }
-      `}</style>
     </div>
   );
 }

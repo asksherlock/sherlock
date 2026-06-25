@@ -71,8 +71,6 @@ export interface Config {
     media: Media;
     posts: Post;
     testimonials: Testimonial;
-    portfolios: Portfolio;
-    services: Service;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -84,8 +82,6 @@ export interface Config {
     media: MediaSelect<false> | MediaSelect<true>;
     posts: PostsSelect<false> | PostsSelect<true>;
     testimonials: TestimonialsSelect<false> | TestimonialsSelect<true>;
-    portfolios: PortfoliosSelect<false> | PortfoliosSelect<true>;
-    services: ServicesSelect<false> | ServicesSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -181,10 +177,10 @@ export interface Post {
   id: number;
   title: string;
   slug: string;
-  heroImage?: (number | null) | Media;
+  featuredImage: number | Media;
   author?: (number | null) | User;
   publishedAt?: string | null;
-  excerpt?: string | null;
+  excerpt: string;
   content: {
     root: {
       type: string;
@@ -216,33 +212,6 @@ export interface Testimonial {
   avatar?: (number | null) | Media;
   updatedAt: string;
   createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "portfolios".
- */
-export interface Portfolio {
-  id: number;
-  title: string;
-  description?: string | null;
-  image?: (number | null) | Media;
-  link?: string | null;
-  updatedAt: string;
-  createdAt: string;
-  _status?: ('draft' | 'published') | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "services".
- */
-export interface Service {
-  id: number;
-  title: string;
-  description?: string | null;
-  icon?: string | null;
-  updatedAt: string;
-  createdAt: string;
-  _status?: ('draft' | 'published') | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -283,14 +252,6 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'testimonials';
         value: number | Testimonial;
-      } | null)
-    | ({
-        relationTo: 'portfolios';
-        value: number | Portfolio;
-      } | null)
-    | ({
-        relationTo: 'services';
-        value: number | Service;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -381,7 +342,7 @@ export interface MediaSelect<T extends boolean = true> {
 export interface PostsSelect<T extends boolean = true> {
   title?: T;
   slug?: T;
-  heroImage?: T;
+  featuredImage?: T;
   author?: T;
   publishedAt?: T;
   excerpt?: T;
@@ -401,31 +362,6 @@ export interface TestimonialsSelect<T extends boolean = true> {
   avatar?: T;
   updatedAt?: T;
   createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "portfolios_select".
- */
-export interface PortfoliosSelect<T extends boolean = true> {
-  title?: T;
-  description?: T;
-  image?: T;
-  link?: T;
-  updatedAt?: T;
-  createdAt?: T;
-  _status?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "services_select".
- */
-export interface ServicesSelect<T extends boolean = true> {
-  title?: T;
-  description?: T;
-  icon?: T;
-  updatedAt?: T;
-  createdAt?: T;
-  _status?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

@@ -6,7 +6,7 @@ export const DashboardStats: React.FC = async () => {
   const payload = await getPayload({ config: configPromise })
   
   const { totalDocs: totalPosts } = await payload.find({ collection: 'posts', limit: 1 })
-  const { totalDocs: totalServices } = await payload.find({ collection: 'services', limit: 1 })
+  const { totalDocs: totalTestimonials } = await payload.find({ collection: 'testimonials', limit: 1 })
   const { totalDocs: totalUsers } = await payload.find({ collection: 'users', limit: 1 })
 
   return (
@@ -34,8 +34,8 @@ export const DashboardStats: React.FC = async () => {
           borderTop: '2px solid #7c3aed',
           boxShadow: '0 -4px 15px rgba(124, 58, 237, 0.15)'
         }}>
-          <div style={{ fontSize: '0.7rem', textTransform: 'uppercase', color: '#888', letterSpacing: '1px', marginBottom: '0.75rem', fontWeight: '600' }}>SERVICIOS</div>
-          <div style={{ fontSize: '2rem', fontWeight: 'bold', color: 'white' }}>{totalServices}</div>
+          <div style={{ fontSize: '0.7rem', textTransform: 'uppercase', color: '#888', letterSpacing: '1px', marginBottom: '0.75rem', fontWeight: '600' }}>TESTIMONIOS</div>
+          <div style={{ fontSize: '2rem', fontWeight: 'bold', color: 'white' }}>{totalTestimonials}</div>
         </div>
 
         {/* Card 3 */}

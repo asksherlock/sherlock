@@ -1,7 +1,18 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 export default function Footer() {
+  const [siteSettings, setSiteSettings] = useState(null);
+
+  useEffect(() => {
+    fetch('http://localhost:4000/api/globals/site-settings')
+      .then(res => res.json())
+      .then(data => {
+        setSiteSettings(data);
+      })
+      .catch(err => console.error('Error fetching site settings:', err));
+  }, []);
+
   return (
     <footer style={{
       background: '#000000',
@@ -58,7 +69,6 @@ export default function Footer() {
                 title: 'EMPRESA',
                 links: [
                   { label: 'Sobre nosotros', href: '#about' },
-                  { label: 'Contacto', href: '#contact' }
                 ]
               },
               {
@@ -99,6 +109,38 @@ export default function Footer() {
                       </a>
                     );
                   })}
+
+                  {/* Dinamic Contact Details from CMS */}
+                  {col.title === 'EMPRESA' && siteSettings && (
+                    <>
+                      {siteSettings.contactEmail && (
+                        <a href={`mailto:${siteSettings.contactEmail}`} style={{
+                          color: '#64748b',
+                          textDecoration: 'none',
+                          fontSize: '15px',
+                          fontWeight: 500,
+                          transition: 'color 0.2s ease',
+                        }}
+                        onMouseEnter={e => e.target.style.color = '#f8fafc'}
+                        onMouseLeave={e => e.target.style.color = '#64748b'}>
+                          {siteSettings.contactEmail}
+                        </a>
+                      )}
+                      {siteSettings.phone && (
+                        <a href={`tel:${siteSettings.phone}`} style={{
+                          color: '#64748b',
+                          textDecoration: 'none',
+                          fontSize: '15px',
+                          fontWeight: 500,
+                          transition: 'color 0.2s ease',
+                        }}
+                        onMouseEnter={e => e.target.style.color = '#f8fafc'}
+                        onMouseLeave={e => e.target.style.color = '#64748b'}>
+                          {siteSettings.phone}
+                        </a>
+                      )}
+                    </>
+                  )}
                 </div>
               </div>
             ))}

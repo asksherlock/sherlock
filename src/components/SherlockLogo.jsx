@@ -1,6 +1,6 @@
 export default function SherlockLogo({ size = 36, showText = true }) {
   return (
-    <a href="#" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 10 }}>
+    <div style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 10 }}>
       {/* Pixel glasses SVG */}
       <svg
         width={size * 2.2}
@@ -59,6 +59,6 @@ export default function SherlockLogo({ size = 36, showText = true }) {
           }}>Sherlock</span>
         </span>
       )}
-    </a>
+    </div>
   );
 }

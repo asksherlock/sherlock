@@ -13,19 +13,19 @@ Sherlock AI es una plataforma moderna construida con una arquitectura Full-Stack
 
 1.  **Frontend Ultra Rápido**
     *   Landing page optimizada con efectos visuales modernos.
-    *   Rutas dinámicas para el Blog que consumen la API REST del CMS.
-    *   Diseño responsivo y amigable para el usuario.
+    *   Rutas dinámicas para el Blog que consumen la API REST del CMS y parsean el contenido Lexical (Rich Text).
+    *   Sección interactiva de "Testimonios" que consume directamente del CMS.
 2.  **Panel de Administración Inteligente (Custom Dashboard)**
     *   Panel de Payload CMS totalmente re-diseñado con la identidad visual de "Ask Sherlock".
-    *   **Dashboard Estadístico en Tiempo Real**: Tarjetas con efecto neón que muestran la cantidad de artículos, servicios, usuarios y el estado del sistema.
-    *   Organización de colecciones modular (System, Content, Business).
+    *   **Dashboard Estadístico en Tiempo Real**: Tarjetas con efecto neón que muestran la cantidad de artículos, testimonios, usuarios y el estado del sistema.
+    *   Organización modular unificada: Todas las configuraciones principales viven bajo el grupo "Sistema".
 3.  **Control de Versiones y Borradores (Estilo Google Docs)**
-    *   Todas las colecciones principales (Artículos, Servicios, Portafolios) cuentan con sistema de versiones.
+    *   Todas las colecciones de contenido cuentan con sistema de versiones.
     *   Capacidad de guardar "Borradores" (Drafts) sin publicarlos al frontend.
     *   Historial completo de ediciones para restaurar versiones pasadas.
-4.  **Base de Datos en Supabase (IPv4 Session Pooling)**
-    *   Conexión estable utilizando el *Session Pooler* de Supavisor (puerto 5432).
-    *   Garantiza máxima compatibilidad con redes y frameworks modernos.
+4.  **Base de Datos Segura y Aislada en Supabase**
+    *   Se utiliza un **esquema personalizado** (`schemaName: 'sherlock'`) para que las tablas de Sherlock no se mezclen ni sobreescriban otras tablas en la base de datos pública compartida.
+    *   Preparado para trabajar con **S3 Storage** para que las imágenes se guarden directamente en un Bucket de Supabase.
 
 ## 📦 Estructura del Proyecto
 
@@ -36,32 +36,52 @@ El repositorio está dividido en dos partes fundamentales:
 
 ## 🛠️ Instalación y Uso Local
 
-Para levantar el proyecto en tu entorno local, necesitas tener instalado Node.js (v18+).
+Sigue estas instrucciones paso a paso para reproducir el proyecto en una computadora nueva:
 
-### 1. Clonar el repositorio
+### 1. Requisito de Red (Para Windows)
+Supabase ha migrado sus conexiones directas a **IPv6**. Si tu proveedor de internet local o tu computadora no soportan IPv6 nativo, el backend no podrá conectarse a la base de datos.
+**Solución:** Descarga e instala [Cloudflare WARP (1.1.1.1)](https://1.1.1.1/). Actívalo antes de iniciar el servidor para obtener soporte IPv6 de forma mágica y gratuita.
+
+### 2. Clonar el repositorio
 ```bash
 git clone https://github.com/asksherlock/sherlock.git
 cd sherlock
 ```
 
-### 2. Configurar Variables de Entorno
-Dentro de la carpeta `cms/`, debes tener un archivo `.env` con las siguientes credenciales (asegúrate de colocar las tuyas):
+### 3. Configurar Variables de Entorno
+Dentro de la carpeta `cms/`, debes duplicar el archivo `.env.example` y renombrarlo a `.env`. Asegúrate de rellenarlo con las credenciales correctas:
 
 ```env
-DATABASE_URI=postgresql://[usuario]:[password]@[pooler-url].supabase.com:5432/postgres
-PAYLOAD_SECRET=tu-secreto-super-seguro
+# Conexión directa a la base de datos Supabase (Requiere IPv6 o WARP)
+DATABASE_URI=postgresql://[usuario]:[password]@db.[project-ref].supabase.co:5432/postgres
+
+# Secreto de encriptación de Payload CMS
+PAYLOAD_SECRET=un-secreto-super-seguro
+
+# Supabase Storage (S3) Configuration para imágenes
+S3_ENDPOINT=https://[PROJECT_ID].supabase.co/storage/v1/s3
+S3_BUCKET=sherlock-media
+S3_ACCESS_KEY_ID=tu-access-key
+S3_SECRET_ACCESS_KEY=tu-secret-key
+S3_REGION=auto
 ```
 
-### 3. Instalar Dependencias y Arrancar
-Hemos configurado un script global que levantará **ambos servidores al mismo tiempo** (Frontend en el puerto `5173` y Backend en el puerto `4000`).
+### 4. Instalar Dependencias y Arrancar
+Hemos configurado un script global que instalará y levantará **ambos servidores al mismo tiempo** (Frontend en el puerto `5173` o `5174` y Backend en el puerto `4000`).
 
 Desde la raíz del proyecto, ejecuta:
 ```bash
+# Instala las dependencias principales
 npm install
+
+# Instala las dependencias del CMS
+cd cms && npm install && cd ..
+
+# Arranca ambos entornos en paralelo
 npm run dev:all
 ```
 
-*   **Frontend**: `http://localhost:5173`
+*   **Frontend**: `http://localhost:5173` (o 5174 si el puerto está en uso)
 *   **Panel CMS**: `http://localhost:4000/admin`
 *   **API del CMS**: `http://localhost:4000/api`
 

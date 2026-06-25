@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import { useLocation, useNavigate } from 'react-router-dom';
 import SherlockLogo from './SherlockLogo';
 
 const NAV_LINKS = [
-  { label: 'Plataforma', href: '/#platform' },
+  { label: 'Plataforma', href: '/#features' },
   { label: 'Cómo funciona', href: '/#how-it-works' },
   { label: 'Planes', href: '/#pricing' },
   { label: 'Clientes', href: '/#clients' },
@@ -12,7 +13,9 @@ const NAV_LINKS = [
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
-  const [theme, setTheme] = useState('dark');
+  const [isFirstVisit] = useState(() => !sessionStorage.getItem('hasVisited'));
+  const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 30);
@@ -24,7 +27,7 @@ export default function Navbar() {
     <motion.nav
       initial={{ opacity: 0, y: -20, filter: 'blur(10px)' }}
       animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-      transition={{ duration: 2.0, delay: 4.0, ease: 'easeInOut' }}
+      transition={{ duration: isFirstVisit ? 2.0 : 0.5, delay: isFirstVisit ? 4.0 : 0, ease: 'easeInOut' }}
       style={{
         position: 'fixed',
         top: 0, left: 0, right: 0,
@@ -40,12 +43,49 @@ export default function Navbar() {
         maxWidth: 1200, margin: '0 auto', height: 72,
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
       }}>
-        <SherlockLogo size={30} showText={true} />
+        <a 
+          href="/" 
+          onClick={(e) => {
+            e.preventDefault();
+            if (location.pathname !== '/') {
+              navigate('/');
+            } else {
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+          }}
+          style={{ textDecoration: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center' }}
+        >
+          <SherlockLogo size={30} showText={true} />
+        </a>
 
         <div style={{ display: 'flex', gap: 32, alignItems: 'center' }} className="desktop-nav">
           {NAV_LINKS.map(link => (
-            <a key={link.href} href={link.href}
-              style={{ fontSize: '14px', fontWeight: 500, color: '#94a3b8', textDecoration: 'none', transition: 'color 0.2s' }}
+            <a 
+              key={link.href} 
+              href={link.href}
+              onClick={(e) => {
+                if (link.href.startsWith('/#')) {
+                  const targetId = link.href.substring(2);
+                  if (location.pathname === '/') {
+                    // Si ya estamos en la página principal, scrollear suavemente
+                    e.preventDefault();
+                    const el = document.getElementById(targetId);
+                    if (el) {
+                      el.scrollIntoView({ behavior: 'smooth' });
+                    }
+                  } else {
+                    // Si estamos en el blog, dejar que el link navegue (o forzar navegación)
+                    // React Router no siempre maneja hashes externos bien con <a> tags simples,
+                    // así que podemos forzarlo:
+                    e.preventDefault();
+                    navigate(link.href);
+                  }
+                } else if (link.href.startsWith('/') && !link.href.includes('#')) {
+                  e.preventDefault();
+                  navigate(link.href);
+                }
+              }}
+              style={{ fontSize: '14px', fontWeight: 500, color: '#94a3b8', textDecoration: 'none', transition: 'color 0.2s', cursor: 'pointer' }}
               onMouseEnter={e => e.target.style.color = '#f8fafc'}
               onMouseLeave={e => e.target.style.color = '#94a3b8'}
             >

@@ -1,5 +1,7 @@
 import { useRef, useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
+import { ArrowRight } from 'lucide-react';
 
 const CLIENTS = [
   { name: 'BBVA', image: '/logos/LOGO-BBVA.png' },
@@ -152,16 +154,67 @@ export default function Clients() {
         .float-anim-0 { animation: float0 6s ease-in-out infinite; }
         .float-anim-1 { animation: float1 5s ease-in-out infinite; }
         .float-anim-2 { animation: float2 7s ease-in-out infinite; }
+        
+        .testimonial-btn {
+          display: inline-flex;
+          align-items: center;
+          gap: 12px;
+          padding: 12px 28px;
+          background: rgba(255, 255, 255, 0.03);
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          border-radius: 100px;
+          color: #f8fafc;
+          text-decoration: none;
+          font-weight: 600;
+          font-size: 14px;
+          font-family: 'Space Grotesk', sans-serif;
+          transition: all 0.3s ease;
+          position: relative;
+          overflow: hidden;
+        }
+        
+        .testimonial-btn::before {
+          content: '';
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+          transform: translateX(-100%);
+          transition: transform 0.5s ease;
+        }
+        
+        .testimonial-btn:hover {
+          background: rgba(255, 255, 255, 0.08);
+          border-color: rgba(56, 189, 248, 0.5);
+          box-shadow: 0 0 20px rgba(56, 189, 248, 0.2);
+          transform: translateY(-2px);
+        }
+        
+        .testimonial-btn:hover::before {
+          transform: translateX(100%);
+        }
       `}</style>
 
       {/* Infinite scrolling row */}
-      <div style={{ overflow: 'hidden', padding: '20px 0 40px 0' }}>
+      <div style={{ overflow: 'hidden', padding: '20px 0 20px 0' }}>
         <div ref={rowRef} style={{ display: 'flex', gap: 24, width: 'max-content', alignItems: 'center' }}>
           {/* Repeat enough times to fill a large screen seamlessly */}
           {[...CLIENTS, ...CLIENTS, ...CLIENTS, ...CLIENTS].map((c, i) => (
             <LogoImg key={i} client={c} index={i} />
           ))}
         </div>
+      </div>
+      
+      {/* Testimonial Button */}
+      <div style={{ textAlign: 'center', marginTop: '16px', position: 'relative', zIndex: 30 }}>
+        <motion.div initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: 0.2 }}>
+          <a href="#testimonials" className="testimonial-btn" onClick={(e) => {
+            e.preventDefault();
+            document.getElementById('testimonials')?.scrollIntoView({ behavior: 'smooth' });
+          }}>
+            Ver Testimonios
+            <ArrowRight size={18} />
+          </a>
+        </motion.div>
       </div>
     </section>
   );

@@ -1,15 +1,23 @@
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import ParticleCanvas from './ParticleCanvas';
 import SyntheticSimulator from './SyntheticSimulator';
 import SherlockLogo from './SherlockLogo';
 
-const revealEffect = (delay = 0) => ({
+const revealEffect = (delay = 0, isFirstVisit = true) => ({
   initial: { opacity: 0, scale: 0.95, filter: 'blur(10px)' },
   animate: { opacity: 1, scale: 1, filter: 'blur(0px)' },
-  transition: { duration: 2.0, delay, ease: 'easeInOut' },
+  transition: { duration: isFirstVisit ? 2.0 : 0.5, delay: isFirstVisit ? delay : 0, ease: 'easeInOut' },
 });
 
 export default function Hero() {
+  const [isFirstVisit] = useState(() => !sessionStorage.getItem('hasVisited'));
+  
+  useEffect(() => {
+    if (isFirstVisit) {
+      sessionStorage.setItem('hasVisited', 'true');
+    }
+  }, [isFirstVisit]);
   return (
     <section id="hero" style={{
       position: 'relative',
@@ -26,7 +34,7 @@ export default function Hero() {
         <motion.div 
           initial={{ opacity: 0, filter: 'blur(10px)', scale: 1.05 }} 
           animate={{ opacity: 1, filter: 'blur(0px)', scale: 1 }} 
-          transition={{ duration: 1.0, delay: 0.9, ease: 'easeInOut' }}
+          transition={{ duration: isFirstVisit ? 1.0 : 0.5, delay: isFirstVisit ? 0.9 : 0, ease: 'easeInOut' }}
         >
           <ParticleCanvas />
         </motion.div>
@@ -60,7 +68,7 @@ export default function Hero() {
         <motion.h1 
           initial={{ opacity: 0, scale: 0.95, filter: 'blur(10px)' }}
           animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
-          transition={{ duration: 1.9, delay: 2.1, ease: 'easeInOut' }}
+          transition={{ duration: isFirstVisit ? 1.9 : 0.5, delay: isFirstVisit ? 2.1 : 0, ease: 'easeInOut' }}
           style={{ 
             fontSize: 'clamp(56px, 8vw, 96px)', 
             lineHeight: 1.25, 
@@ -81,7 +89,7 @@ export default function Hero() {
           }}>En Minutos</span>
         </motion.h1>
         {/* 4. Subtitle at the bottom */}
-        <motion.p {...revealEffect(4.0)} style={{ 
+        <motion.p {...revealEffect(4.0, isFirstVisit)} style={{ 
           position: 'absolute',
           bottom: 120,
           left: 0,
@@ -114,7 +122,7 @@ export default function Hero() {
           alignItems: 'center',
         }}>
           {/* Left Column: Text + Stats */}
-          <motion.div {...revealEffect(4.0)} style={{ display: 'flex', flexDirection: 'column', gap: '40px' }}>
+          <motion.div {...revealEffect(4.0, isFirstVisit)} style={{ display: 'flex', flexDirection: 'column', gap: '40px' }}>
             <div>
               <h2 style={{ fontSize: '32px', fontWeight: 800, color: '#ffffff', marginBottom: 16, fontFamily: 'Space Grotesk, sans-serif', lineHeight: 1.2 }}>
                 Motor Sintético Interactivo
@@ -150,8 +158,8 @@ export default function Hero() {
           </motion.div>
 
           {/* Simulator */}
-          <motion.div {...revealEffect(4.0)} style={{ width: '100%' }}>
-            <SyntheticSimulator />
+          <motion.div {...revealEffect(4.0, isFirstVisit)} style={{ width: '100%' }}>
+            <SyntheticSimulator isFirstVisit={isFirstVisit} />
           </motion.div>
         </div>
 

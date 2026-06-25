@@ -1,5 +1,6 @@
-import React, { Suspense, useRef } from 'react';
+import React, { Suspense, useRef, useEffect } from 'react';
 import { motion, useInView } from 'framer-motion';
+import { useLocation } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import StarfieldBackground from './components/StarfieldBackground';
@@ -12,16 +13,17 @@ const HowItWorks = React.lazy(() => import('./components/HowItWorks'));
 const Comparison = React.lazy(() => import('./components/Comparison'));
 const FAQ = React.lazy(() => import('./components/FAQ'));
 const Pricing = React.lazy(() => import('./components/Pricing'));
+const TestimonialsSection = React.lazy(() => import('./components/TestimonialsSection'));
 const CTA = React.lazy(() => import('./components/CTA'));
 const Footer = React.lazy(() => import('./components/Footer'));
 const Medusae = React.lazy(() => import('./components/medusae/Medusae'));
 
 // Wrapper to only render/fetch when near the viewport
-const LazySection = ({ children, height = '30vh' }) => {
+const LazySection = ({ id, children, height = '30vh' }) => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "400px 0px" });
   return (
-    <div ref={ref} style={{ minHeight: isInView ? 'auto' : height }}>
+    <div id={id} ref={ref} style={{ minHeight: isInView ? 'auto' : height }}>
       {isInView && <Suspense fallback={<div style={{ height }} />}>{children}</Suspense>}
     </div>
   );
@@ -30,6 +32,21 @@ const LazySection = ({ children, height = '30vh' }) => {
 export default function LandingPage() {
   const bottomSectionRef = useRef(null);
   const isBottomVisible = useInView(bottomSectionRef, { margin: "-20% 0px -20% 0px" });
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.hash) {
+      const id = location.hash.substring(1);
+      const element = document.getElementById(id);
+      if (element) {
+        setTimeout(() => {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }, 150);
+      }
+    } else {
+      window.scrollTo(0, 0);
+    }
+  }, [location]);
 
   return (
     <div style={{ background: '#000000', color: '#f8fafc', minHeight: '100vh', fontFamily: '"Inter", sans-serif', position: 'relative' }}>
@@ -66,17 +83,18 @@ export default function LandingPage() {
           <Hero />
           
           {/* Asincrónico (Lazy Loading) */}
-          <LazySection height="15vh"><Clients /></LazySection>
-          <LazySection height="40vh"><AboutSherlock /></LazySection>
-          <LazySection height="60vh"><HowItWorks /></LazySection>
-          <LazySection height="80vh"><Features /></LazySection>
-          <LazySection height="60vh"><Comparison /></LazySection>
+          <LazySection id="clients" height="15vh"><Clients /></LazySection>
+          <LazySection id="about" height="40vh"><AboutSherlock /></LazySection>
+          <LazySection id="how-it-works" height="60vh"><HowItWorks /></LazySection>
+          <LazySection id="features" height="80vh"><Features /></LazySection>
+          <LazySection id="comparison" height="60vh"><Comparison /></LazySection>
           
           {/* Bottom container */}
           <div ref={bottomSectionRef} style={{ position: 'relative', zIndex: 5 }}>
-            <LazySection height="50vh"><Pricing /></LazySection>
-            <LazySection height="50vh"><CTA /></LazySection>
-            <LazySection height="40vh"><FAQ /></LazySection>
+            <LazySection id="pricing" height="50vh"><Pricing /></LazySection>
+            <LazySection id="testimonials-section" height="40vh"><TestimonialsSection /></LazySection>
+            <LazySection id="cta" height="50vh"><CTA /></LazySection>
+            <LazySection id="faq" height="40vh"><FAQ /></LazySection>
             <LazySection height="30vh"><Footer /></LazySection>
           </div>
         </div>
