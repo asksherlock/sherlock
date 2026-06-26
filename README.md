@@ -32,7 +32,7 @@ Sherlock AI es una plataforma moderna construida con una arquitectura Full-Stack
     *   Historial completo de ediciones para restaurar versiones pasadas.
 4.  **Backend Separado (API First)**
     *   La plataforma consume el contenido desde un CMS headless.
-    *   Ver repositorio del CMS para detalles: [sherlock-cms](https://github.com/ivaninnogyzer/sherlock-cms)
+    *   Ver repositorio del CMS para detalles: [ask_sherlock_cms](https://github.com/asksherlock/ask_sherlock_cms)
 
 ## 📦 Estructura del Proyecto
 
