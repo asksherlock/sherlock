@@ -1,4 +1,12 @@
-# 🕵️‍♂️ Sherlock AI - Full Stack Platform
+<div align="center">
+  <img src="./public/ask_sherlock_logo_b.png" alt="Sherlock AI Logo" width="250" />
+  <h1>Sherlock AI - Website Ecosystem</h1>
+  <p><strong>Transformando la investigación de usuarios con Inteligencia Artificial</strong></p>
+</div>
+
+---
+
+## 🚀 Overview
 
 Sherlock AI es una plataforma moderna construida con una arquitectura Full-Stack que combina un frontend interactivo y rápido con un sistema de gestión de contenido (CMS) robusto y altamente personalizado.
 
@@ -41,8 +49,13 @@ git clone https://github.com/asksherlock/sherlock.git
 cd sherlock
 ```
 
-### 2. Configurar Variables de Entorno (Opcional)
-Si el Frontend requiere conectarse a un CMS local en lugar del de producción, puedes configurar la URL de la API (por defecto apunta a `http://localhost:4000`).
+### 2. Configuración del Frontend (Website)
+
+Crea un archivo `.env` en la raíz del proyecto para conectar tu frontend con el CMS local. (Si no creas este archivo, la web intentará buscar la API en producción):
+
+```env
+VITE_CMS_URL=http://localhost:4000/api
+```
 
 ### 3. Instalar Dependencias y Arrancar
 Desde la raíz del proyecto, ejecuta:
@@ -54,4 +67,16 @@ npm run dev
 *   **Frontend**: `http://localhost:5173` (o 5174 si el puerto está en uso)
 
 ---
-*Desarrollado con ❤️ para Sherlock AI.*
+
+## 🎨 Principios de Diseño (UI/UX)
+El frontend de Sherlock AI sigue un conjunto estricto de reglas de diseño para transmitir innovación y confianza:
+- **Colores:** Fondo galáctico oscuro con acentos en azul eléctrico (`#1a5cff`) y tonos violetas.
+- **Glassmorphism:** Tarjetas y contenedores con desenfoque de fondo y bordes de cristal (`backdrop-blur-md border border-white/10`).
+- **Tipografía:** Uso de la fuente 'Inter' para máxima legibilidad, con encabezados de alto contraste y gradientes lineales (`text-transparent bg-clip-text bg-gradient-to-r`).
+- **Animaciones:** Reveal de texto progresivo, efectos de hover suaves, y una estela de estrellas interactiva en el Hero Section.
+
+---
+
+<div align="center">
+  <em>Desarrollado con ❤️ para Sherlock AI.</em>
+</div>
