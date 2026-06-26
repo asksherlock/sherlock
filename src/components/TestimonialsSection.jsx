@@ -9,7 +9,7 @@ export default function TestimonialsSection() {
 
   useEffect(() => {
     if (isInView) {
-      fetch('http://localhost:4000/api/testimonials?depth=1')
+      fetch(`${import.meta.env.VITE_CMS_URL}/testimonials?depth=1`)
         .then(res => res.json())
         .then(data => {
           setTestimonials(data.docs || []);

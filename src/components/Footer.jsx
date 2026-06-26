@@ -5,7 +5,7 @@ export default function Footer() {
   const [siteSettings, setSiteSettings] = useState(null);
 
   useEffect(() => {
-    fetch('http://localhost:4000/api/globals/site-settings')
+    fetch(`${import.meta.env.VITE_CMS_URL}/globals/site-settings`)
       .then(res => res.json())
       .then(data => {
         setSiteSettings(data);

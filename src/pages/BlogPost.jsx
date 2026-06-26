@@ -13,7 +13,7 @@ export default function BlogPost() {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    fetch(`http://localhost:4000/api/posts?where[slug][equals]=${slug}&depth=1`)
+    fetch(`${import.meta.env.VITE_CMS_URL}/posts?where[slug][equals]=${slug}&depth=1`)
       .then(res => res.json())
       .then(data => {
         if (data.docs && data.docs.length > 0) {
