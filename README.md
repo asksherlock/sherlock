@@ -1,5 +1,4 @@
 <div align="center">
-  <img src="./public/ask_sherlock_logo_b.png" alt="Sherlock AI Logo" width="250" />
   <h1>Sherlock AI - Website Ecosystem</h1>
   <p><strong>Transformando la investigación de usuarios con Inteligencia Artificial</strong></p>
 </div>
