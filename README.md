@@ -77,5 +77,5 @@ El frontend de Sherlock AI sigue un conjunto estricto de reglas de diseño para 
 ---
 
 <div align="center">
-  <em>Desarrollado con ❤️ para Sherlock AI.</em>
+  <em>Desarrollado para Sherlock AI.</em>
 </div>
