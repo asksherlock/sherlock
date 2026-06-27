@@ -68,7 +68,7 @@ export default function BlogPost() {
               {post.featuredImage && (
                 <div className="w-full aspect-[16/9] md:h-[400px] rounded-3xl overflow-hidden mb-16 shadow-2xl border border-white/5 relative group">
                   <img 
-                    src={`http://localhost:4000${post.featuredImage.url}`} 
+                    src={post.featuredImage.url.startsWith('http') ? post.featuredImage.url : `${import.meta.env.VITE_CMS_URL.replace('/api', '')}${post.featuredImage.url}`} 
                     alt={post.featuredImage.alt || post.title}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
                   />
