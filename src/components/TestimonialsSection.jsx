@@ -114,7 +114,7 @@ export default function TestimonialsSection() {
                 <div style={{ display: 'flex', alignItems: 'center', gap: 16, borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: 20 }}>
                   <div style={{ width: 48, height: 48, borderRadius: '50%', background: '#1e293b', overflow: 'hidden', border: '1px solid rgba(255,255,255,0.1)', flexShrink: 0 }}>
                     {testimonial.avatar ? (
-                      <img src={`http://localhost:4000${testimonial.avatar.url}`} alt={testimonial.author} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                      <img src={testimonial.avatar.url.startsWith('http') ? testimonial.avatar.url : `${import.meta.env.VITE_CMS_URL.replace('/api', '')}${testimonial.avatar.url}`} alt={testimonial.author} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                     ) : (
                       <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#64748b', fontSize: 20 }}>
                         👤
