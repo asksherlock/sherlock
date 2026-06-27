@@ -50,9 +50,12 @@ const serialize = (children) => {
           </a>
         );
       case 'upload':
+        const imageUrl = node.value?.url?.startsWith('http') 
+          ? node.value.url 
+          : `${import.meta.env.VITE_CMS_URL.replace('/api', '')}${node.value?.url}`;
         return (
           <figure key={i} className="my-10">
-            <img src={`http://localhost:4000${node.value?.url}`} alt={node.value?.alt || 'Image'} className="rounded-xl w-full object-cover shadow-2xl border border-white/10" />
+            <img src={imageUrl} alt={node.value?.alt || 'Image'} className="rounded-xl w-full object-cover shadow-2xl border border-white/10" />
             {node.value?.alt && <figcaption className="text-center text-sm text-slate-500 mt-3">{node.value.alt}</figcaption>}
           </figure>
         );
